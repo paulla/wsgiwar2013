@@ -1,11 +1,14 @@
 from pyramid.view import view_config
+from pyramid.httpexceptions import HTTPFound
+
+from pyramid_mailer.mailer import Mailer
+from pyramid_mailer.message import Message
 
 import bcrypt
 
 import couchdbkit
 
 from paulla.wsgiwar2013.models.users import Users_db
-
 
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
@@ -34,9 +37,6 @@ def submitSignup(request):
 
         user.save()
 
-        from pyramid_mailer.mailer import Mailer
-        from pyramid_mailer.message import Message
-
         mailer = Mailer()
         message = Message(subject="Your subsription !",
                           sender=request.registry.settings['mail_from'],
@@ -46,11 +46,11 @@ def submitSignup(request):
 
         mailer.send(message)
 
-        return {}
+        return {'name': request.POST['name']}
 
     else:
-        # redo :/
-        pass
-    return {}
+
+        return HTTPFound(location=request.route_path('signup'))
+
 
 

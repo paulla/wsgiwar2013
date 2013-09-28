@@ -4,7 +4,12 @@
 
     <div class="row">
       <p class="span6">
-	Please, wait for our email.
+	Welcome, ${name}
+      </p>
+      </div >
+      <div class="row">
+      <p class="span6">
+	Please, wait for our email. Meanwhile look some <a href="${request.route_path('home')}"> links posted by other users.</a>
       </p>
     </div>
   </div>
