@@ -64,7 +64,8 @@ def submitLogin(request):
         request.session.flash(flashError)
         return HTTPFound(location=request.route_path('login'))
 
-    if bcrypt.hashpw(request.POST['password'].encode('utf-8'), user.password) != user.password:
+    if bcrypt.hashpw(request.POST['password'].encode('utf-8'), \
+                    user.password) != user.password:
         request.session.flash(flashError)
 
         return HTTPFound(location=request.route_path('login'))
@@ -79,7 +80,8 @@ def submitLogin(request):
     return HTTPFound(location=request.route_path('home'), headers=headers)
 
 
-@view_config(route_name='submitSignup', renderer='templates/signupSubmit.pt')
+@view_config(route_name='submitSignup', \
+            renderer='templates/signupSubmit.pt')
 def submitSignup(request):
 
     try:
@@ -95,7 +97,8 @@ def submitSignup(request):
         return HTTPFound(location=request.route_path('signup'))
 
     if request.POST['password'] == request.POST['confirmPassword']:
-        password = bcrypt.hashpw(request.POST['password'].encode('utf-8'), bcrypt.gensalt())
+        password = bcrypt.hashpw(request.POST['password'].encode('utf-8'), \
+                                bcrypt.gensalt())
 
         user = User(password=password,
                     name=request.POST['name'],
@@ -161,6 +164,40 @@ def submitlink(request):
     request.session.flash("link added !")
     return HTTPFound(location=request.route_path('home'))
 
+@view_config(route_name="changePassword", \
+            renderer="templates/changePassword.pt")
+def changePassword(request):
+    """
+    Change user password.
+    """
+    try:
+        user = User.get(request.session['login'])
+    except couchdbkit.exceptions.ResourceNotFound:
+        return HTTPNotFound()
+
+    else:
+
+    if not request.POST['initPassword'].strip():
+        request.session.flash(u"Please provide your actual password")
+        return HTTPFound(location=request.route_path('changePassword'))
+    if not request.POST['newPassword'].strip():
+        request.session.flash(u"Please provide your new password")
+        return HTTPFound(location=request.route_path('changePassword'))
+    if not request.POST['confirmPassword'].strip():
+        request.session.flash(u"Please confirm your new password")
+        return HTTPFound(location=request.route_path('changePassword'))
+
+    if request.POST['newPassword'] == request.POST['confirmPassword']:
+        password = bcrypt.hashpw(
+                request.POST['newPassword'].encode('utf-8'), \
+                bcrypt.gensalt())
+        user = User(password=password)
+        user.save()
+    else:
+        request.session.flash(u"Password does not match")
+        return HTTPFound(locatin=request.route_path('changePassword'))
+
+
 @view_config(route_name="user", renderer="templates/user.pt")
 def user(request):
     """
@@ -171,7 +208,8 @@ def user(request):
         return HTTPNotFound()
 
 
-    links = Link.view('user_link/all',  limit=10, descending=True, key=user._id)
+    links = Link.view('user_link/all',  limit=10, \
+                     descending=True, key=user._id)
 
     return {'links': links, 'user': user}
 
