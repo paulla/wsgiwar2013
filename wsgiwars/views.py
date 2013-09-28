@@ -28,7 +28,7 @@ Link.set_db(db)
 
 push('couchdb/_design/public', db)
 push('couchdb/_design/user_link', db)
-
+push('couchdb/_design/my_link', db)
 
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
@@ -175,3 +175,11 @@ def user(request):
 
     return {'links': links, 'user': user}
 
+
+@view_config(route_name="mylinks", renderer="templates/mylinks.pt")
+def mylinks(request):
+    # TODO check if log
+    links = Link.view('my_link/all', limit=10, descending=True,
+                      key=request.session['login'])
+
+    return {'links': links}
