@@ -1,0 +1,12 @@
+<metal:main use-macro="load: layout.pt" >
+  <div class="span9" metal:fill-slot="content">
+    <h1 i18n:translate=''>About</h1>
+
+    <div class="row">
+      <span class="span2" for="About" i18n:translate=''>
+          Because it's fun
+      </span>
+    </div>
+
+  </div>
+</metal:main>

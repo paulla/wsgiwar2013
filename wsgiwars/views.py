@@ -28,6 +28,10 @@ Link.set_db(db)
 def home(request):
     return {'project': 'wsgiwars'}
 
+@view_config(route_name='about', renderer='templates/about.pt')
+def about(request):
+    return {'project': 'wsgiwars'}
+
 @view_config(route_name='signup', renderer='templates/signup.pt')
 def signup(request):
     return {}
@@ -64,7 +68,15 @@ def submitLogin(request):
 
 @view_config(route_name='submitSignup', renderer='templates/signupSubmit.pt')
 def submitSignup(request):
-    # TODO check is username isn't taken
+
+    try:
+        User.get(request.POST['login'])
+    except couchdbkit.exceptions.ResourceNotFound:
+        pass
+    else:
+        request.session.flash(u"Username already exist")
+        return HTTPFound(location=request.route_path('signup'))
+
 
     if request.POST['password'] == request.POST['confirmPassword']:
         password = bcrypt.hashpw(request.POST['password'], bcrypt.gensalt())
