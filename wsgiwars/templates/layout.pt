@@ -17,11 +17,14 @@
 	    <span class="username"  tal:condition="'username' in request.session">
 	      ${request.session['username']}
 	    </span>
-	    <a class="logout" href="/logout" tal:condition="'username' in request.session">
-	      Déconnexion
+	    <a class="logout" href="/logout" tal:condition="'username' in request.session" i18n:translate=''>
+	      Logout
 	    </a>
-	    <a class="logout" href="/login" tal:condition="'username' not in request.session">
-	      Connexion
+	    <a class="logout" href="/login" tal:condition="'username' not in request.session" i18n:translate=''>
+	      Login
+	    </a>
+	    <a class="logout" href="/signup" tal:condition="'username' not in request.session" i18n:translate=''>
+	      Sign up
 	    </a>
 	  </div>
 	</div>
