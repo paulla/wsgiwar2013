@@ -88,5 +88,6 @@ def submitSignup(request):
 
         return HTTPFound(location=request.route_path('signup'))
 
-
-
+@view_config(route_name='addLink', renderer='templates/addlink.pt')
+def addlink(request):
+    return {}

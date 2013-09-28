@@ -26,7 +26,8 @@ def main(global_config, **settings):
     config.add_route('login', '/login')
     config.add_route('submitLogin', '/login/submit')
 
-    config.add_route('addLink', '/add/link')
+    config.add_route('addLink', '/link/add')
+    config.add_route('submitLink', '/link/submit')
 
     for include in ['pyramid_mailer',
                     'pyramid_fanstatic',

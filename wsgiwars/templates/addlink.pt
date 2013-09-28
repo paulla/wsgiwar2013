@@ -1,0 +1,28 @@
+<metal:main use-macro="load: layout.pt" >
+  <div class="span9" metal:fill-slot="content">
+    <h1 i18n:translate=''>Add a link !</h1>
+
+    <form action="${request.route_path('submitLink')}" method="POST">
+      <div class='row'>
+	<label class="span2" for="link" i18n:translate=''>Link :</label>
+	<input class="span7" name="link" id="link" placeholder="Paste you link here !" type="text"/>
+      </div>
+
+      <div class='row'>
+	<label class="span2" for="tags" i18n:translate=''>Tags :</label>
+	<input class="span7" name="tags" id="tags" placeholder='add your tags split by ","' type="text"/>
+      </div>
+
+      <div class="row">
+	<label class="span2" for="comment" i18n:translate=''>Comment :</label>
+	<textarea row="5" class="span7" name="comment" id="comment" placeholder='Comment your link' ></textarea>
+      </div>
+
+     <div class="row">
+      <input class="span3 btn btn-success" type="submit" name="submmit" id="submit" i18n:translate='' value='Add Link!'></input>
+    </div>
+
+    </form>
+
+  </div>
+</metal:main>
