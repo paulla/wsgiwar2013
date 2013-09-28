@@ -114,6 +114,9 @@ def submitlink(request):
     link.private = False  # TODO
     link.tags = tags
 
+    if 'private' in request.POST:
+        link.private = True
+
     link.save()
 
     request.session.flash("link added !")
