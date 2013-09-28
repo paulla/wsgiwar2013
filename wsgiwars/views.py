@@ -60,7 +60,15 @@ def submitLogin(request):
 
 @view_config(route_name='submitSignup', renderer='templates/signupSubmit.pt')
 def submitSignup(request):
-    # TODO check is username isn't taken
+    user = ''
+    try:
+        user = User.get(request.POST['login'])
+    except couchdbkit.exceptions.ResourceNotFound:
+        pass
+
+    if user:
+        request.session.flash(u"Username already exist")
+        return HTTPFound(location=request.route_path('signup'))
 
     if request.POST['password'] == request.POST['confirmPassword']:
         password = bcrypt.hashpw(request.POST['password'], bcrypt.gensalt())
