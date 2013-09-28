@@ -11,6 +11,12 @@
 	    </a>
 	  </span>
 	</div>
+	<div class="row">
+	  <a tal:repeat="tag link.tags" href="${request.route_path('tag', tag=tag)}">${tag}</a>
+	</div>
+	<div class="row">
+	  <p class="span7"><pre>${link.comment.strip()}</pre></p>
+	</div>
       </div>
     </article>
   </div>
