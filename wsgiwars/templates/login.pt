@@ -1,0 +1,22 @@
+<metal:main use-macro="load: layout.pt" >
+  <div class="span9" metal:fill-slot="content">
+    <h1 i18n:translate=''> Log In !</h1>
+
+    <form action="${request.route_path('submitLogin')}" method="POST" >
+    <div class="row">
+      <label class="span2" for="login" i18n:translate=''>Login :</label>
+      <input class="span4" type="text" name="login" id="login" />
+    </div>
+
+     <div class="row">
+      <label class="span2" for="password" i18n:translate=''>password :</label>
+      <input class="span4" type="password" name="password" id="password" />
+    </div>
+
+    <div class="row">
+      <input class="span3 btn btn-success" type="submit" name="submmit" id="submit" i18n:translate='' value='Login !'></input>
+    </div>
+    </form>
+
+  </div>
+</metal:main>
