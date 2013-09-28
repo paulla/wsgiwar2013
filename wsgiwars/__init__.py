@@ -4,6 +4,8 @@ from pyramid_beaker import set_cache_regions_from_settings
 
 from pyramid.threadlocal import get_current_registry
 
+from wsgiwars.predicate import LoggedPredicate
+
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
@@ -46,6 +48,8 @@ def main(global_config, **settings):
     config.add_route('rss', '/rss')
     config.add_route('userrss', '/user/{userid}/rss')
     config.add_route('tagrss', '/tag/{tag}/rss')
+
+    config.add_view_predicate('logged', LoggedPredicate)
 
     for include in ['pyramid_mailer',
                     'pyramid_fanstatic',
