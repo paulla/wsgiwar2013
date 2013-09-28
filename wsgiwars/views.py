@@ -64,6 +64,8 @@ def submitSignup(request):
     try:
         user = User.get(request.POST['login'])
     except couchdbkit.exceptions.ResourceNotFound:
+        pass
+    else:
         request.session.flash(u"Username already exist")
         return HTTPFound(location=request.route_path('signup'))
 
