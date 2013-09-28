@@ -23,10 +23,14 @@ def main(global_config, **settings):
     config.add_route('submitSignup', '/signup/submit')
     config.add_route('login', '/login')
 
-    config.include('pyramid_fanstatic')
-    config.include('pyramid_chameleon')
-    config.include('pyramid_beaker')
-    config.include('rebecca.fanstatic')
+
+    for include in ['pyramid_mailer',
+                    'pyramid_fanstatic',
+                    'pyramid_chameleon',
+                    'pyramid_beaker',
+                    'rebecca.fanstatic',]:
+
+        config.include(include)
 
     config.add_fanstatic_resources(['js.bootstrap.bootstrap',
                                     'js.bootstrap.bootstrap',

@@ -22,6 +22,7 @@ requires = [
     'py-bcrypt',
     'js.bootstrap',
     'css.fontawesome',
+    'pyramid_mailer',
     ]
 
 setup(name='wsgiwars',
