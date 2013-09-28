@@ -1,6 +1,8 @@
 from pyramid.view import view_config
 from pyramid.threadlocal import get_current_registry
 from pyramid.httpexceptions import HTTPFound
+from pyramid.security import remember
+from pyramid.security import forget
 
 from pyramid_mailer.mailer import Mailer
 from pyramid_mailer.message import Message
@@ -43,11 +45,17 @@ def submitLogin(request):
 
     if bcrypt.hashpw(request.POST['password'], user.password) != user.password:
         request.session.flash(flashError)
+
         return HTTPFound(location=request.route_path('login'))
 
     request.session.flash(u"welcome %s, you are logged" % user.name)
 
-    return HTTPFound(location=request.route_path('home'))
+    headers = remember(request, user._id)
+    request.session['username'] = user.name
+    request.session['login'] = user._id
+    request.session.save()
+
+    return HTTPFound(location=request.route_path('home'), headers=headers)
 
 
 @view_config(route_name='submitSignup', renderer='templates/signupSubmit.pt')
