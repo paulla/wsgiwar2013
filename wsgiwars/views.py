@@ -53,6 +53,10 @@ def submitLogin(request):
 
     flashError = "Sorry dude : wrong login or password"
 
+    if not request.POST['password'].strip():
+        request.session.flash(flashError)
+        return HTTPFound(location=request.route_path('login'))
+
     try:
         user = User.get(request.POST['login'])
     except couchdbkit.exceptions.ResourceNotFound:
