@@ -26,6 +26,9 @@
 	    <a class="logout" href="/signup" tal:condition="'username' not in request.session" i18n:translate=''>
 	      Sign up
 	    </a>
+	    <a class="logout" href="/admin" tal:condition="'is_admin' in request.session and request.session['is_admin']" i18n:translate=''>
+	      Admin
+	    </a>
 	    <a href="/about" i18n:translate=''>
 	      About
 	    </a>
