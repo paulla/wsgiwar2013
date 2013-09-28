@@ -1,0 +1,6 @@
+<metal:main use-macro="load: layout.pt" >
+  <div class="span9" metal:fill-slot="content" tal:define="linkT load: subtemplates/link.pt" >
+    <article metal:use-macro="linkT">
+    </article>
+  </div>
+</metal:main>

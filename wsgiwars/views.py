@@ -216,3 +216,12 @@ def userrss(request):
     links = Link.view('user_link/all',  limit=10, descending=True, key=user._id)
 
     return {'links': links, 'user': user}
+
+@view_config(route_name='link', renderer='templates/link.pt')
+def link(request):
+    link = Link.get(request.matchdict['link'])
+
+    if link.private:
+        raise HTTPNotFound()
+
+    return {'link': link}
