@@ -64,7 +64,7 @@ def submitLogin(request):
         request.session.flash(flashError)
         return HTTPFound(location=request.route_path('login'))
 
-    if bcrypt.hashpw(request.POST['password'], user.password) != user.password:
+    if bcrypt.hashpw(request.POST['password'].encode('utf-8'), user.password) != user.password:
         request.session.flash(flashError)
 
         return HTTPFound(location=request.route_path('login'))
@@ -95,7 +95,7 @@ def submitSignup(request):
         return HTTPFound(location=request.route_path('signup'))
 
     if request.POST['password'] == request.POST['confirmPassword']:
-        password = bcrypt.hashpw(request.POST['password'], bcrypt.gensalt())
+        password = bcrypt.hashpw(request.POST['password'].encode('utf-8'), bcrypt.gensalt())
 
         user = User(password=password,
                     avatar=request.POST['avatar'],
