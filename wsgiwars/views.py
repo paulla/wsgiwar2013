@@ -236,7 +236,7 @@ def submitChangePassword(request):
     """
     Change user password.
     """
-#    return {}
+
     try:
         user = User.get(request.session['login'])
     except couchdbkit.exceptions.ResourceNotFound:
@@ -252,17 +252,20 @@ def submitChangePassword(request):
     if not request.POST['confirmPassword'].strip():
         request.session.flash(u"Please confirm your new password")
         return HTTPFound(location=request.route_path('changePassword'))
+    
+    if not user.password == bcrypt.hashpw(request.POST['initPassword'].encode('utf-8'), user.password):
+        request.session.flash(u"Actual password does not match with register password")
+        return HTTPFound(location=request.route_path('changePassword'))
 
     if request.POST['newPassword'] == request.POST['confirmPassword']:
-        password = bcrypt.hashpw(
-                request.POST['newPassword'].encode('utf-8'), \
-                bcrypt.gensalt())
-        user = User(password=password)
+        password = bcrypt.hashpw( request.POST['newPassword'].encode('utf-8'), bcrypt.gensalt())
+        user.password = password
         user.save()
+        request.session.flash(u"Change done!")
+        return {'user': user}
     else:
         request.session.flash(u"Password does not match")
-        return HTTPFound(locatin=request.route_path('changePassword'))
-
+        return HTTPFound(location=request.route_path('changePassword'))
 
 @view_config(route_name="user", renderer="templates/user.pt")
 def user(request):
