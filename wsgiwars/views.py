@@ -1,4 +1,5 @@
 from pyramid.view import view_config
+from pyramid.threadlocal import get_current_registry
 from pyramid.httpexceptions import HTTPFound
 
 from pyramid_mailer.mailer import Mailer
@@ -8,7 +9,14 @@ import bcrypt
 
 import couchdbkit
 
-from paulla.wsgiwar2013.models.users import Users_db
+from paulla.wsgiwar2013.models.users import User
+
+settings = get_current_registry().settings
+
+server = couchdbkit.Server(settings['couchdb.url'])
+db = server.get_or_create_db(settings['couchdb.db'])
+User.set_db(db)
+
 
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
@@ -28,13 +36,12 @@ def submitSignup(request):
         # Mika64 : your job !
         password = bcrypt.hashpw(request.POST['password'], bcrypt.gensalt())
 
-        user = Users_db(_id=request.POST['username'],
-                password=password,
-                avatar=request.POST['avatar'],
-                name=request.POST['name'],
-                description=request.POST['description'],
-                )
-
+        user = User(password=password,
+                    avatar=request.POST['avatar'],
+                    name=request.POST['name'],
+                    description=request.POST['description'],
+                    )
+        user._id = request.POST['username']
         user.save()
 
         mailer = Mailer()
