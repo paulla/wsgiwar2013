@@ -1,9 +1,9 @@
 <metal:main use-macro="load: layout.pt" >
   <div class="span9" metal:fill-slot="content">
     <article tal:repeat="link links">
-      <div class="link">
+      <div class="link span8" >
 	<div class="row">
-	  <a class="span7" href="${link.url}">${link.url}</a>
+	  <a class="span6" href="${link.url}">${link.url}</a>
 	  <span class='span2'>
 	    <i class="icon-minus"></i>
 	    <a href="${request.route_path('user', userid=link.userID)}">
@@ -18,6 +18,10 @@
 	  <p class="span7"><pre>${link.comment.strip()}</pre></p>
 	</div>
       </div>
+      <tal:if condition='"login" in request.session'>
+	<a class="span1" tal:condition="request.session['login'] != link.userID" href="request.route_path('copyLink', link=link._id)"><i class="icon-plus"></i>
+	</a>
+      </tal:if>
     </article>
   </div>
 </metal:main>

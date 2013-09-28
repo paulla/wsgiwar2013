@@ -30,6 +30,8 @@ def main(global_config, **settings):
     config.add_route('addLink', '/link/add')
     config.add_route('submitLink', '/link/submit')
 
+    config.add_route("copyLink", '/copy/{link}')
+
     config.add_route('user', '/user/{userid}')
 
     config.add_route('tag', '/tag/{tag}')
