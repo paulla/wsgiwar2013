@@ -25,7 +25,7 @@
 
      <div class="row">
       <label class="span2" for="confirmPassword" i18n:translate=''>confirm password :</label>
-      <input class="span4" type="password" name="configrmPassword" id="confirmPassword" />
+      <input class="span4" type="password" name="confirmPassword" id="confirmPassword" />
     </div>
 
     <div class="row">
