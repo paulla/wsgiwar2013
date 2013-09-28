@@ -29,6 +29,8 @@ Link.set_db(db)
 push('couchdb/_design/user', db)
 push('couchdb/_design/public', db)
 push('couchdb/_design/user_link', db)
+push('couchdb/_design/my_link', db)
+push('couchdb/_design/viewTag', db)
 
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
@@ -157,12 +159,15 @@ def submitSignup(request):
         password = bcrypt.hashpw(request.POST['password'].encode('utf-8'), bcrypt.gensalt())
 
         user = User(password=password,
-                    avatar=request.POST['avatar'],
                     name=request.POST['name'],
                     description=request.POST['description'],
                     )
         user._id = request.POST['login']
         user.save()
+
+        if request.POST['avatar']:
+            user.put_attachment(request.POST['avatar'].file, 'avatar')
+
 
         mailer = Mailer()
         message = Message(subject="Your subsription !",
@@ -198,7 +203,7 @@ def submitlink(request):
     #TODO check logged
     #TODO check if not already submit by user
 
-    tags = [tag for tag in request.POST['tags'].split(',')]
+    tags = [tag.strip() for tag in request.POST['tags'].split(',')]
 
     link = Link()
     link.url = request.POST['link']
@@ -231,3 +236,17 @@ def user(request):
 
     return {'links': links, 'user': user}
 
+
+@view_config(route_name="mylinks", renderer="templates/mylinks.pt")
+def mylinks(request):
+    # TODO check if log
+    links = Link.view('my_link/all', limit=10, descending=True,
+                      key=request.session['login'])
+
+    return {'links': links}
+
+@view_config(route_name="tag", renderer="templates/tag.pt")
+def tag(request):
+    links = Link.view('viewTag/all', limit=10, descending=True,
+                      key=request.matchdict['tag'])
+    return {'links': links}

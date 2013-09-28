@@ -55,9 +55,11 @@
 	  <li tal:condition="'login' in request.session and request.path != '/add/link'">
 	    <a href="${request.route_path('addLink')}" i18n:translate='' class="new"><i class="icon-plus"></i> Add a link</a>
 	  </li>
+	  <li tal:condition="'login' in request.session and request.path != '/mylinks'">
+	    <a href="${request.route_path('mylinks')}" i18n:translate='' class="new">My Links</a>
+	  </li>
 	</ul>
       </nav>
-
 
       <div id="content" metal:define-slot="content"></div>
     </div>
