@@ -1,0 +1,6 @@
+<item>
+  <title>${link.url} - ${link.username}</title>
+  <link>${request.route_url('link', link=link._id)}</link>
+  <description>${link.comment}</description>
+  <pubDate>${str(link.created)}</pubDate>
+</item>

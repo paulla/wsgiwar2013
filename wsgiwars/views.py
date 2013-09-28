@@ -255,3 +255,38 @@ def tag(request):
 def logout(request):
     request.session.delete()
     return HTTPFound(location=request.route_path('home'))
+
+@view_config(route_name='rss', renderer='templates/rss.pt')
+def rss(request):
+    links = Link.view('public/all',  limit=10, descending=True)
+    return {'links': links}
+
+
+@view_config(route_name="tagrss", renderer="templates/tagrss.pt")
+def tagrss(request):
+    links = Link.view('viewTag/all', limit=10, descending=True,
+                      key=request.matchdict['tag'])
+    return {'links': links}
+
+
+@view_config(route_name="userrss", renderer="templates/userrss.pt")
+def userrss(request):
+    """
+    """
+    try:
+        user = User.get(request.matchdict['userid'])
+    except couchdbkit.exceptions.ResourceNotFound:
+        return HTTPNotFound()
+
+    links = Link.view('user_link/all',  limit=10, descending=True, key=user._id)
+
+    return {'links': links, 'user': user}
+
+@view_config(route_name='link', renderer='templates/link.pt')
+def link(request):
+    link = Link.get(request.matchdict['link'])
+
+    if link.private:
+        raise HTTPNotFound()
+
+    return {'link': link}

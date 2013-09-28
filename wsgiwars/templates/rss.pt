@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<rss version="2.0">
+   <channel  tal:define="linkT load: subtemplates/link_rss.pt">
+      <title>${request.registry.settings.title}</title>
+      <link>${request.route_url('home')}</link>
+      <description></description>
+    <item tal:repeat="link links" metal:use-macro="linkT">
+    </item>
+   </channel>
+</rss>

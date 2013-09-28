@@ -36,11 +36,16 @@ def main(global_config, **settings):
     config.add_route('submitLink', '/link/submit')
 
     config.add_route("copyLink", '/copy/{link}')
+    config.add_route("link", '/link/{link}')
 
     config.add_route("mylinks", '/mylinks')
     config.add_route('user', '/user/{userid}')
 
     config.add_route('tag', '/tag/{tag}')
+
+    config.add_route('rss', '/rss')
+    config.add_route('userrss', '/user/{userid}/rss')
+    config.add_route('tagrss', '/tag/{tag}/rss')
 
     for include in ['pyramid_mailer',
                     'pyramid_fanstatic',
