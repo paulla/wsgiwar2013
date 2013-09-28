@@ -26,7 +26,7 @@
 	    <a class="logout" href="/signup" tal:condition="'username' not in request.session" i18n:translate=''>
 	      Sign up
 	    </a>
-	    <a class="logout" href="/about" tal:condition="'username' not in request.session" i18n:translate=''>
+	    <a href="/about" i18n:translate=''>
 	      About
 	    </a>
 	  </div>
