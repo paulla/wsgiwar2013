@@ -12,6 +12,7 @@ from pyramid_mailer.message import Message
 import bcrypt
 
 import couchdbkit
+from couchdbkit.designer import push
 
 from wsgiwars.models.user import User
 from wsgiwars.models.link import Link
@@ -24,9 +25,15 @@ db = server.get_or_create_db(settings['couchdb.db'])
 User.set_db(db)
 Link.set_db(db)
 
+push('couchdb/_design/public', db)
+
+
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
-    return {'project': 'wsgiwars'}
+    links = Link.view('public/all',  limit=10, descending=True)
+
+    return {'project': 'wsgiwars',
+            'links': links}
 
 @view_config(route_name='about', renderer='templates/about.pt')
 def about(request):
