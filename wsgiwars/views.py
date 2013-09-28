@@ -251,6 +251,11 @@ def tag(request):
                       key=request.matchdict['tag'])
     return {'links': links}
 
+@view_config(route_name='logout')
+def logout(request):
+    request.session.delete()
+    return HTTPFound(location=request.route_path('home'))
+
 @view_config(route_name='rss', renderer='templates/rss.pt')
 def rss(request):
     links = Link.view('public/all',  limit=10, descending=True)
