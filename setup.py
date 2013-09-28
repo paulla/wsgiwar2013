@@ -12,6 +12,16 @@ requires = [
     'pyramid',
     'pyramid_debugtoolbar',
     'waitress',
+    'pyramid_chameleon',
+    'pyramid_fanstatic',
+    'rebecca.fanstatic',
+    'couchdbkit',
+    'pyramid_beaker',
+    'Babel',
+    'lingua',
+    'py-bcrypt',
+    'js.bootstrap',
+    'css.fontawesome',
     ]
 
 setup(name='wsgiwars',
