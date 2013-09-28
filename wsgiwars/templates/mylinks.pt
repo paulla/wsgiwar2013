@@ -1,0 +1,7 @@
+<metal:main use-macro="load: layout.pt" >
+  <div class="span9" metal:fill-slot="content" tal:define="linkT load: subtemplates/link.pt" >
+    <h1 i18n:translate=''>${request.session.username}, your link</h1>
+    <article tal:repeat="link links" metal:use-macro="linkT">
+    </article>
+  </div>
+</metal:main>
