@@ -38,3 +38,6 @@ nosetests.xml
 *~
 \#*
 .\#*
+
+#session data
+tmp
