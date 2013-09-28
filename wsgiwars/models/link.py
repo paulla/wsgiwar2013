@@ -1,8 +1,12 @@
 import couchdbkit
 
 
-class Links_db(couchdbkit.Document):
-    title = couchdbkit.StringProperty()
+class Link(couchdbkit.Document):
+#    title = couchdbkit.StringProperty()
     url = couchdbkit.StringProperty()
     created = couchdbkit.DateTimeProperty()
-    tags = couchdbkit.StringProperty()
+    comment = couchdbkit.StringProperty()
+    userID = couchdbkit.StringProperty()
+    username = couchdbkit.StringProperty()
+    tags = couchdbkit.StringListProperty()
+    private = couchdbkit.BooleanProperty()
