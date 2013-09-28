@@ -9,7 +9,7 @@ import bcrypt
 
 import couchdbkit
 
-from paulla.wsgiwar2013.models.users import User
+from wsgiwars.models.user import User
 
 settings = get_current_registry().settings
 
@@ -29,8 +29,8 @@ def signup(request):
 
 @view_config(route_name='submitSignup', renderer='templates/signupSubmit.pt')
 def submitSignup(request):
-
     # TODO check is username isn't taken
+
     if request.POST['password'] == request.POST['confirmPassword']:
         # register user
         # Mika64 : your job !
@@ -41,7 +41,7 @@ def submitSignup(request):
                     name=request.POST['name'],
                     description=request.POST['description'],
                     )
-        user._id = request.POST['username']
+        user._id = request.POST['login']
         user.save()
 
         mailer = Mailer()
