@@ -2,7 +2,7 @@ import couchdbkit
 
 
 class Users_db(couchdbkit.Document):
-    username = couchdbkit.StringProperty()
+    _id = couchdbkit.StringProperty()
     password = couchdbkit.StringProperty()
     avatar = couchdbkit.StringProperty()
     name = couchdbkit.StringProperty()
