@@ -35,7 +35,7 @@
 
     <div class="row">
       <label class="span2" for="description" i18n:translate='' >Description :</label>
-      <textarea class="span4" row="5" placeholder="just a raw text...">
+      <textarea class="span4" row="5" placeholder="just a raw text..." id="description" name="description">
       </textarea>
     </div>
 
