@@ -39,7 +39,7 @@ def home(request):
     return {'project': 'wsgiwars',
             'links': links}
 
-@view_config(route_name='delete_user')
+@view_config(route_name='delete_user', logged=True)
 def delete(request):
     if not 'login' in request.session:
         request.session.flash(u"Sorry dude : Can't read this page")
@@ -52,7 +52,7 @@ def delete(request):
     user.delete()
     return HTTPFound(location=request.route_url('admin_list',page="0"))
 
-@view_config(route_name='admin')
+@view_config(route_name='admin', logged=True)
 def admin(request):
     if not 'login' in request.session:
         request.session.flash(u"Sorry dude : Can't read this page")
@@ -63,7 +63,7 @@ def admin(request):
         return HTTPFound(location=request.route_url('home'))
     return HTTPFound(location=request.route_url('admin_list',page="0"))
 
-@view_config(route_name='admin_list', renderer='templates/admin.pt')
+@view_config(route_name='admin_list', renderer='templates/admin.pt', logged=True)
 def admin_list(request):
     if not 'login' in request.session:
         request.session.flash(u"Sorry dude : Can't read this page")
@@ -77,7 +77,7 @@ def admin_list(request):
     return {'users': users,
             'page': request.matchdict['page']}
 
-@view_config(route_name='admin_user', renderer='templates/admin_user.pt')
+@view_config(route_name='admin_user', renderer='templates/admin_user.pt', logged=True)
 def admin_user(request):
     if not 'login' in request.session:
         request.session.flash(u"Sorry dude : Can't read this page")
@@ -187,11 +187,11 @@ def submitSignup(request):
 
         return HTTPFound(location=request.route_path('signup'))
 
-@view_config(route_name='addLink', renderer='templates/addlink.pt')
+@view_config(route_name='addLink', renderer='templates/addlink.pt', logged=True)
 def addlink(request):
     return {'link': None}
 
-@view_config(route_name='copyLink', renderer='templates/addlink.pt')
+@view_config(route_name='copyLink', renderer='templates/addlink.pt', logged=True)
 def copylink(request):
     link = Link.get(request.matchdict['link'])
 
@@ -200,7 +200,7 @@ def copylink(request):
 
     return {'link': link}
 
-@view_config(route_name='submitLink')
+@view_config(route_name='submitLink', logged=True)
 def submitlink(request):
 
     #TODO check logged
@@ -283,7 +283,7 @@ def user(request):
     return {'links': links, 'user': user}
 
 
-@view_config(route_name="mylinks", renderer="templates/mylinks.pt")
+@view_config(route_name="mylinks", renderer="templates/mylinks.pt", logged=True)
 def mylinks(request):
     # TODO check if log
     links = Link.view('my_link/all', limit=10, descending=True,
@@ -296,3 +296,43 @@ def tag(request):
     links = Link.view('viewTag/all', limit=10, descending=True,
                       key=request.matchdict['tag'])
     return {'links': links}
+
+@view_config(route_name='logout', logged=True)
+def logout(request):
+    request.session.delete()
+    return HTTPFound(location=request.route_path('home'))
+
+@view_config(route_name='rss', renderer='templates/rss.pt')
+def rss(request):
+    links = Link.view('public/all',  limit=10, descending=True)
+    return {'links': links}
+
+
+@view_config(route_name="tagrss", renderer="templates/tagrss.pt")
+def tagrss(request):
+    links = Link.view('viewTag/all', limit=10, descending=True,
+                      key=request.matchdict['tag'])
+    return {'links': links}
+
+
+@view_config(route_name="userrss", renderer="templates/userrss.pt")
+def userrss(request):
+    """
+    """
+    try:
+        user = User.get(request.matchdict['userid'])
+    except couchdbkit.exceptions.ResourceNotFound:
+        return HTTPNotFound()
+
+    links = Link.view('user_link/all',  limit=10, descending=True, key=user._id)
+
+    return {'links': links, 'user': user}
+
+@view_config(route_name='link', renderer='templates/link.pt')
+def link(request):
+    link = Link.get(request.matchdict['link'])
+
+    if link.private:
+        raise HTTPNotFound()
+
+    return {'link': link}

@@ -4,6 +4,8 @@ from pyramid_beaker import set_cache_regions_from_settings
 
 from pyramid.threadlocal import get_current_registry
 
+from wsgiwars.predicate import LoggedPredicate
+
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
@@ -28,6 +30,7 @@ def main(global_config, **settings):
     config.add_route('signup', '/signup')
     config.add_route('submitSignup', '/signup/submit')
 
+    config.add_route('logout', '/logout')
     config.add_route('login', '/login')
     config.add_route('submitLogin', '/login/submit')
 
@@ -35,6 +38,7 @@ def main(global_config, **settings):
     config.add_route('submitLink', '/link/submit')
 
     config.add_route("copyLink", '/copy/{link}')
+    config.add_route("link", '/link/{link}')
 
     config.add_route("mylinks", '/mylinks')
     config.add_route('user', '/user/{userid}')
@@ -42,6 +46,12 @@ def main(global_config, **settings):
     config.add_route('submitChangePassword', '/changePassword/submit')
 
     config.add_route('tag', '/tag/{tag}')
+
+    config.add_route('rss', '/rss')
+    config.add_route('userrss', '/user/{userid}/rss')
+    config.add_route('tagrss', '/tag/{tag}/rss')
+
+    config.add_view_predicate('logged', LoggedPredicate)
 
     for include in ['pyramid_mailer',
                     'pyramid_fanstatic',
