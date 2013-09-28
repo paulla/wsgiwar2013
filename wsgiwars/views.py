@@ -13,6 +13,9 @@ def home(request):
 def signup(request):
     return {}
 
+@view_config(route_name='login', renderer='templates/login.pt')
+def login(request):
+    return {}
 
 @view_config(route_name='submitSignup', renderer='templates/signupSubmit.pt')
 def submitSignup(request):

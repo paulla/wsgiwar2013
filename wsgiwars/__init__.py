@@ -19,10 +19,12 @@ def main(global_config, **settings):
     config.add_static_view('static', 'static', cache_max_age=3600)
 
     config.add_route('home', '/')
+
     config.add_route('signup', '/signup')
     config.add_route('submitSignup', '/signup/submit')
-    config.add_route('login', '/login')
 
+    config.add_route('login', '/login')
+    config.add_route('submitLogin', '/login/Submit')
 
     for include in ['pyramid_mailer',
                     'pyramid_fanstatic',
