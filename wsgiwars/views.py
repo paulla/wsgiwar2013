@@ -202,3 +202,17 @@ def tagrss(request):
     links = Link.view('viewTag/all', limit=10, descending=True,
                       key=request.matchdict['tag'])
     return {'links': links}
+
+
+@view_config(route_name="userrss", renderer="templates/userrss.pt")
+def userrss(request):
+    """
+    """
+    try:
+        user = User.get(request.matchdict['userid'])
+    except couchdbkit.exceptions.ResourceNotFound:
+        return HTTPNotFound()
+
+    links = Link.view('user_link/all',  limit=10, descending=True, key=user._id)
+
+    return {'links': links, 'user': user}

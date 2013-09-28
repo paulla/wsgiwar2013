@@ -4,4 +4,7 @@
     <article tal:repeat="link links" metal:use-macro="linkT">
     </article>
   </div>
+  <div metal:fill-slot="rss" class="span9">
+    <a href="${request.route_path('userrss', userid=request.matchdict['userid'])}"><i class="icon-rss"></i> RSS</a>
+  </div>
 </metal:main>
