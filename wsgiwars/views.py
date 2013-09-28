@@ -62,7 +62,7 @@ def submitLogin(request):
 def submitSignup(request):
 
     try:
-        user = User.get(request.POST['login'])
+        User.get(request.POST['login'])
     except couchdbkit.exceptions.ResourceNotFound:
         pass
     else:
