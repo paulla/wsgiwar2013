@@ -55,8 +55,6 @@ def submitSignup(request):
     # TODO check is username isn't taken
 
     if request.POST['password'] == request.POST['confirmPassword']:
-        # register user
-        # Mika64 : your job !
         password = bcrypt.hashpw(request.POST['password'], bcrypt.gensalt())
 
         user = User(password=password,
