@@ -29,6 +29,7 @@ Link.set_db(db)
 push('couchdb/_design/public', db)
 push('couchdb/_design/user_link', db)
 push('couchdb/_design/my_link', db)
+push('couchdb/_design/viewTag', db)
 
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
