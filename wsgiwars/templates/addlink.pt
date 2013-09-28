@@ -5,7 +5,7 @@
     <form action="${request.route_path('submitLink')}" method="POST">
       <div class='row'>
 	<label class="span2" for="link" i18n:translate=''>Link :</label>
-	<input class="span7" name="link" id="link" placeholder="Paste you link here !" type="text"/>
+	<input class="span7" name="link" id="link" placeholder="Paste you link here !" type="url"/>
       </div>
 
       <div class='row'>
