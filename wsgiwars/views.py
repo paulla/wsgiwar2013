@@ -168,6 +168,11 @@ def submitlink(request):
 @view_config(route_name="changePassword", \
             renderer="templates/changePassword.pt")
 def changePassword(request):
+    return {}
+
+@view_config(route_name="submitChangePassword", \
+            renderer="templates/submitChangePassword.pt")
+def submitChangePassword(request):
     """
     Change user password.
     """
