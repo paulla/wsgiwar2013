@@ -18,6 +18,11 @@
 	<textarea row="5" class="span7" name="comment" id="comment" placeholder='Comment your link' ></textarea>
       </div>
 
+      <div class="row">
+	<label class="span2" for="private" i18n:translate=''>Private</label>
+	<input class="span1" type="checkbox" name="private" id="private" value="private"/>
+      </div>
+
      <div class="row">
       <input class="span3 btn btn-success" type="submit" name="submmit" id="submit" i18n:translate='' value='Add Link!'></input>
     </div>
