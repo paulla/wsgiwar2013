@@ -1,3 +1,5 @@
+import datetime
+
 from pyramid.view import view_config
 from pyramid.threadlocal import get_current_registry
 from pyramid.httpexceptions import HTTPFound
@@ -12,13 +14,15 @@ import bcrypt
 import couchdbkit
 
 from wsgiwars.models.user import User
+from wsgiwars.models.link import Link
 
 settings = get_current_registry().settings
 
 server = couchdbkit.Server(settings['couchdb.url'])
 db = server.get_or_create_db(settings['couchdb.db'])
-User.set_db(db)
 
+User.set_db(db)
+Link.set_db(db)
 
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
@@ -91,3 +95,26 @@ def submitSignup(request):
 @view_config(route_name='addLink', renderer='templates/addlink.pt')
 def addlink(request):
     return {}
+
+
+@view_config(route_name='submitLink')
+def submitlink(request):
+
+    #TODO check logged
+    #TODO check if not already submit by user
+
+    tags = [tag for tag in request.POST['tags'].split(',')]
+
+    link = Link()
+    link.url = request.POST['link']
+    link.created = datetime.datetime.now()
+    link.comment = request.POST['comment'].strip()
+    link.userID = request.session['login']
+    link.username = request.session['username']
+    link.private = False  # TODO
+    link.tags = tags
+
+    link.save()
+
+    request.session.flash("link added !")
+    return HTTPFound(location=request.route_path('home'))
