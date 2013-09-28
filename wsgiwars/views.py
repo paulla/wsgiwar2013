@@ -194,5 +194,11 @@ def tag(request):
 @view_config(route_name='rss', renderer='templates/rss.pt')
 def rss(request):
     links = Link.view('public/all',  limit=10, descending=True)
+    return {'links': links}
 
+
+@view_config(route_name="tagrss", renderer="templates/tagrss.pt")
+def tagrss(request):
+    links = Link.view('viewTag/all', limit=10, descending=True,
+                      key=request.matchdict['tag'])
     return {'links': links}

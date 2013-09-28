@@ -39,6 +39,8 @@ def main(global_config, **settings):
     config.add_route('tag', '/tag/{tag}')
 
     config.add_route('rss', '/rss')
+    config.add_route('userrss', '/user/{userid}/rss')
+    config.add_route('tagrss', '/tag/{tag}/rss')
 
     for include in ['pyramid_mailer',
                     'pyramid_fanstatic',
