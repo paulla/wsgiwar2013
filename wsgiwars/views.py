@@ -85,6 +85,9 @@ def submitSignup(request):
         request.session.flash(u"Username already exist")
         return HTTPFound(location=request.route_path('signup'))
 
+    if not request.POST['password'].strip():
+        request.session.flash(u"You realy need a password")
+        return HTTPFound(location=request.route_path('signup'))
 
     if request.POST['password'] == request.POST['confirmPassword']:
         password = bcrypt.hashpw(request.POST['password'], bcrypt.gensalt())
