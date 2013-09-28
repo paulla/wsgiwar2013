@@ -69,7 +69,7 @@ def submitSignup(request):
 
         mailer = Mailer()
         message = Message(subject="Your subsription !",
-                          sender=request.registry.settings['mail_from'],
+                          sender=settings['mail_from'],
                           recipients=[request.POST['email']],
                           body="Confirm the link") # TODO add link
 
