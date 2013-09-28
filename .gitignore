@@ -34,5 +34,7 @@ nosetests.xml
 .project
 .pydevproject
 
-#backup file
+#backup files
 *~
+\#*
+.\#*
