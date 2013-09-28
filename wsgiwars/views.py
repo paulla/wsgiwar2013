@@ -1,5 +1,7 @@
 from pyramid.view import view_config
 
+from pyramid_mailer.mailer import Mailer
+from pyramid_mailer.message import Message
 
 
 @view_config(route_name='home', renderer='templates/home.pt')
@@ -18,10 +20,6 @@ def submitSignup(request):
     if request.POST['password'] == request.POST['confirmPassword']:
         # register user
         # Mika64 : your job !
-
-
-        from pyramid_mailer.mailer import Mailer
-        from pyramid_mailer.message import Message
 
         mailer = Mailer()
         message = Message(subject="Your subsription !",
