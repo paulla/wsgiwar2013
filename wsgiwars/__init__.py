@@ -24,5 +24,8 @@ def main(global_config, **settings):
     config.include('pyramid_beaker')
     config.include('rebecca.fanstatic')
 
+    config.add_fanstatic_resources(['js.bootstrap.bootstrap']
+                                   , r'.*\.pt')
+
     config.scan()
     return config.make_wsgi_app()
