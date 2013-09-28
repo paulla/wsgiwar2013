@@ -20,6 +20,7 @@ def main(global_config, **settings):
 
     config.add_route('home', '/')
     config.add_route('signup', '/signup')
+    config.add_route('submitSignup', '/signup/submit')
     config.add_route('login', '/login')
 
     config.include('pyramid_fanstatic')

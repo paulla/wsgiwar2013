@@ -1,6 +1,8 @@
 <metal:main use-macro="load: layout.pt" >
   <div class="span9" metal:fill-slot="content">
     <h1 i18n:translate=''> Sign up !</h1>
+
+    <form action="${request.route_path('submitSignup')}" method="POST" enctype="multipart/form-data">
     <div class="row">
       <label class="span2" for="login" i18n:translate=''>Login :</label>
       <input class="span4" type="text" name="login" id="login" />
@@ -37,6 +39,14 @@
       </textarea>
     </div>
 
+    <div class="row">
+      <p i18n:translate='' class='span4'>An confirmation email 'll be sent to you soon. Please click on the link for confirm your inscription</p>
+    </div>
+
+    <div class="row">
+      <input class="span3 btn btn-success" type="submit" name="submmit" id="submit" i18n:translate='' value='Sign up now !'></input>
+    </div>
+    </form>
 
   </div>
 </metal:main>
