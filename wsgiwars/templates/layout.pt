@@ -59,7 +59,9 @@
       </nav>
 
       <div id="content" metal:define-slot="content"></div>
+
     </div>
+    <div id="rss" metal:define-slot="rss"></div>
     </article>
 
 
