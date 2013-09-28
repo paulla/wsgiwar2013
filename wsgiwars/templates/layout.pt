@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <head>
+    <title metal:define-slot='title'>wsgi wars</title>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
+    <!-- TODO meta keyword -->
+    <!-- TODO meta description -->
+  </head>
+  <body>
+    <article class="fluid-container">
+      <div class="navbar">
+	<div class="navbar-inner">
+	  <div class="container" >
+	    <span class="username"  tal:condition="'username' in request.session">
+	      ${request.session['username']}
+	    </span>
+	    <a class="logout" href="/logout" tal:condition="'username' in request.session">
+	      Déconnexion
+	    </a>
+	    <a class="logout" href="/login" tal:condition="'username' not in request.session">
+	      Connexion
+	    </a>
+	  </div>
+	</div>
+      </div>
+
+    <div class="container-fluid">
+      <tal:message condition="request.session.peek_flash()">
+	<div class="alert"
+             tal:repeat="message request.session.pop_flash()">
+	  <button type="button" class="close" data-dismiss="alert">&times;</button>
+	  <tal:alert replace="structure message" />
+	</div>
+      </tal:message>
+    </div>
+
+    <div class="row-fluid">
+      <nav class="span2">
+	<ul class="nav nav-tabs nav-stacked">
+	  <li tal:condition='request.path != "/"'>
+	    <a href="${request.route_path('home')}" i18n:translate='' class="new">home</a>
+	  </li>
+	  <!-- TODO others -->
+	</ul>
+      </nav>
+
+
+      <div id="content" metal:define-slot="content"></div>
+    </div>
+    </article>
+
+
+
+  </body>
+</html>
+

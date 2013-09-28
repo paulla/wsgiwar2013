@@ -1,0 +1,4 @@
+<metal:main use-macro="load: layout.pt" >
+  <div class="span8" metal:fill-slot="content">
+  </div>
+</metal:main>
