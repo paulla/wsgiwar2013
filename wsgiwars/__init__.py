@@ -30,6 +30,8 @@ def main(global_config, **settings):
     config.add_route('addLink', '/link/add')
     config.add_route('submitLink', '/link/submit')
 
+    config.add_route('user', '/user/{userid}')
+
     for include in ['pyramid_mailer',
                     'pyramid_fanstatic',
                     'pyramid_chameleon',

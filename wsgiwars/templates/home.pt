@@ -1,4 +1,17 @@
 <metal:main use-macro="load: layout.pt" >
-  <div class="span8" metal:fill-slot="content">
+  <div class="span9" metal:fill-slot="content">
+    <article tal:repeat="link links">
+      <div class="link">
+	<div class="row">
+	  <a class="span7" href="${link.url}">${link.url}</a>
+	  <span class='span2'>
+	    <i class="icon-minus"></i>
+	    <a href="${request.route_path('user', userid=link.userID)}">
+	      ${link.username}
+	    </a>
+	  </span>
+	</div>
+      </div>
+    </article>
   </div>
 </metal:main>
