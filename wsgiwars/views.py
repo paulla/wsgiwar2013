@@ -143,7 +143,7 @@ def submitlink(request):
     #TODO check logged
     #TODO check if not already submit by user
 
-    tags = [tag for tag in request.POST['tags'].split(',')]
+    tags = [tag.strip() for tag in request.POST['tags'].split(',')]
 
     link = Link()
     link.url = request.POST['link']
