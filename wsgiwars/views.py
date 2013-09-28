@@ -1,4 +1,5 @@
 from pyramid.view import view_config
+from pyramid.httpexceptions import HTTPFound
 
 from pyramid_mailer.mailer import Mailer
 from pyramid_mailer.message import Message
@@ -30,11 +31,11 @@ def submitSignup(request):
 
         mailer.send(message)
 
-        return {}
+        return {'name': request.POST['name']}
 
     else:
-        # redo :/
-        pass
-    return {}
+
+        return HTTPFound(location=request.route_path('signup'))
+
 
 
