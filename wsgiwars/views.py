@@ -170,12 +170,12 @@ def changePassword(request):
     """
     Change user password.
     """
+#    return {}
     try:
         user = User.get(request.session['login'])
     except couchdbkit.exceptions.ResourceNotFound:
-        return HTTPNotFound()
-
-    else:
+        request.session.flash(u"Please login first")
+        return HTTPFound(location=request.route_path('login'))
 
     if not request.POST['initPassword'].strip():
         request.session.flash(u"Please provide your actual password")
