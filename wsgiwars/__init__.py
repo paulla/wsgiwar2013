@@ -33,6 +33,7 @@ def main(global_config, **settings):
     config.add_route("copyLink", '/copy/{link}')
 
     config.add_route('user', '/user/{userid}')
+    config.add_route('changePassword', '/changePassword/{userid}')
 
     config.add_route('tag', '/tag/{tag}')
 
