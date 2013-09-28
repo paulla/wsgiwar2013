@@ -27,6 +27,7 @@ User.set_db(db)
 Link.set_db(db)
 
 push('couchdb/_design/public', db)
+push('couchdb/_design/user_link', db)
 
 
 @view_config(route_name='home', renderer='templates/home.pt')
@@ -156,4 +157,18 @@ def submitlink(request):
 
     request.session.flash("link added !")
     return HTTPFound(location=request.route_path('home'))
+
+@view_config(route_name="user", renderer="templates/user.pt")
+def user(request):
+    """
+    """
+    try:
+        user = User.get(request.matchdict['userid'])
+    except couchdbkit.exceptions.ResourceNotFound:
+        return HTTPNotFound()
+
+
+    links = Link.view('user_link/all',  limit=10, descending=True, key=user._id)
+
+    return {'links': links, 'user': user}
 
