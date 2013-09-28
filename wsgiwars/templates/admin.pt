@@ -1,0 +1,37 @@
+<metal:main use-macro="load: layout.pt" >
+  <div class="span9" metal:fill-slot="content">
+      <h1 i18n:translate=''>Admin</h1>
+      <article>
+<table>
+ 
+   <thead>
+       <tr>
+           <th>Username</th>
+           <th>Name</th>
+           <th>Description</th>
+           <th>Admin</th>
+           <th>delete</th>
+       </tr>
+   </thead>
+
+   <tfoot>
+       <tr>
+           <th><a tal:condition="int(page)>int(0)" href="${request.route_path('admin_list',page=int(page)-int(1))}">Previous</a></th>
+           <th><a href="${request.route_path('admin_list',page=int(page)+int(1))}">Next</a></th>
+       </tr>
+   </tfoot>
+
+   <tbody tal:repeat="user users">
+       <tr>
+           <td><a href="${request.route_path('admin_user',user=user._id)}">${user._id}</a></td>
+           <td>${user.name}</td>
+           <td>${user.description}</td>
+           <td><input tal:condition="user.is_admin" type="checkbox" name="admin" readonly checked/>
+               <input tal:condition="user.is_admin is not True" type="checkbox" name="admin" readonly/></td>
+           <td><a href="${request.route_path('delete_user',user=user._id)}">delete </a></td>
+       </tr>
+   </tbody>
+</table>
+      </article>
+  </div>
+</metal:main>

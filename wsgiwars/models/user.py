@@ -6,3 +6,4 @@ class User(couchdbkit.Document):
     avatar = couchdbkit.StringProperty()
     name = couchdbkit.StringProperty()
     description = couchdbkit.StringProperty()
+    is_admin = couchdbkit.BooleanProperty()
