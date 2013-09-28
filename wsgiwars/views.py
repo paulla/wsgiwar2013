@@ -3,6 +3,7 @@ import datetime
 from pyramid.view import view_config
 from pyramid.threadlocal import get_current_registry
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPNotFound
 from pyramid.security import remember
 from pyramid.security import forget
 
@@ -26,10 +27,15 @@ User.set_db(db)
 Link.set_db(db)
 
 push('couchdb/_design/user', db)
+push('couchdb/_design/public', db)
+push('couchdb/_design/user_link', db)
 
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
-    return {'project': 'wsgiwars'}
+    links = Link.view('public/all',  limit=10, descending=True)
+
+    return {'project': 'wsgiwars',
+            'links': links}
 
 @view_config(route_name='delete_user')
 def delete(request):
@@ -79,13 +85,17 @@ def submitLogin(request):
 
     flashError = "Sorry dude : wrong login or password"
 
+    if not request.POST['password'].strip():
+        request.session.flash(flashError)
+        return HTTPFound(location=request.route_path('login'))
+
     try:
         user = User.get(request.POST['login'])
     except couchdbkit.exceptions.ResourceNotFound:
         request.session.flash(flashError)
         return HTTPFound(location=request.route_path('login'))
 
-    if bcrypt.hashpw(request.POST['password'], user.password) != user.password:
+    if bcrypt.hashpw(request.POST['password'].encode('utf-8'), user.password) != user.password:
         request.session.flash(flashError)
 
         return HTTPFound(location=request.route_path('login'))
@@ -111,9 +121,12 @@ def submitSignup(request):
         request.session.flash(u"Username already exist")
         return HTTPFound(location=request.route_path('signup'))
 
+    if not request.POST['password'].strip():
+        request.session.flash(u"You realy need a password")
+        return HTTPFound(location=request.route_path('signup'))
 
     if request.POST['password'] == request.POST['confirmPassword']:
-        password = bcrypt.hashpw(request.POST['password'], bcrypt.gensalt())
+        password = bcrypt.hashpw(request.POST['password'].encode('utf-8'), bcrypt.gensalt())
 
         user = User(password=password,
                     avatar=request.POST['avatar'],
@@ -140,8 +153,16 @@ def submitSignup(request):
 
 @view_config(route_name='addLink', renderer='templates/addlink.pt')
 def addlink(request):
-    return {}
+    return {'link': None}
 
+@view_config(route_name='copyLink', renderer='templates/addlink.pt')
+def copylink(request):
+    link = Link.get(request.matchdict['link'])
+
+    if link.private:
+        raise HTTPNotFound()
+
+    return {'link': link}
 
 @view_config(route_name='submitLink')
 def submitlink(request):
@@ -167,3 +188,18 @@ def submitlink(request):
 
     request.session.flash("link added !")
     return HTTPFound(location=request.route_path('home'))
+
+@view_config(route_name="user", renderer="templates/user.pt")
+def user(request):
+    """
+    """
+    try:
+        user = User.get(request.matchdict['userid'])
+    except couchdbkit.exceptions.ResourceNotFound:
+        return HTTPNotFound()
+
+
+    links = Link.view('user_link/all',  limit=10, descending=True, key=user._id)
+
+    return {'links': links, 'user': user}
+
