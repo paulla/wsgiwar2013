@@ -3,6 +3,7 @@ import datetime
 from pyramid.view import view_config
 from pyramid.threadlocal import get_current_registry
 from pyramid.httpexceptions import HTTPFound
+from pyramid.httpexceptions import HTTPNotFound
 from pyramid.security import remember
 from pyramid.security import forget
 
@@ -113,8 +114,16 @@ def submitSignup(request):
 
 @view_config(route_name='addLink', renderer='templates/addlink.pt')
 def addlink(request):
-    return {}
+    return {'link': None}
 
+@view_config(route_name='copyLink', renderer='templates/addlink.pt')
+def copylink(request):
+    link = Link.get(request.matchdict['link'])
+
+    if link.private:
+        raise HTTPNotFound()
+
+    return {'link': link}
 
 @view_config(route_name='submitLink')
 def submitlink(request):
@@ -140,3 +149,4 @@ def submitlink(request):
 
     request.session.flash("link added !")
     return HTTPFound(location=request.route_path('home'))
+
