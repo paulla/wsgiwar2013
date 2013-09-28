@@ -3,7 +3,9 @@
     <h1 i18n:translate=''>About</h1>
 
     <div class="row">
-      <label class="span2" for="About" i18n:translate=''>Because it's fun</label>
+      <span class="span2" for="About" i18n:translate=''>
+          Because it's fun
+      </span>
     </div>
 
   </div>
