@@ -184,3 +184,9 @@ def mylinks(request):
                       key=request.session['login'])
 
     return {'links': links}
+
+@view_config(route_name="tag", renderer="templates/tag.pt")
+def tag(request):
+    links = Link.view('viewTag/all', limit=10, descending=True,
+                      key=request.matchdict['tag'])
+    return {'links': links}
