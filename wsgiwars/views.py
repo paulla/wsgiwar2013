@@ -32,17 +32,20 @@ def login(request):
 
 @view_config(route_name='submitLogin')
 def submitLogin(request):
+
+    flashError = "Sorry dude : wrong login or password"
+
     try:
         user = User.get(request.POST['login'])
     except couchdbkit.exceptions.ResourceNotFound:
-        # TODO flash
+        request.session.flash(flashError)
         return HTTPFound(location=request.route_path('login'))
 
     if bcrypt.hashpw(request.POST['password'], user.password) != user.password:
-        # TODO same flah
+        request.session.flash(flashError)
         return HTTPFound(location=request.route_path('login'))
 
-    # TODO Flash
+    request.session.flash(u"welcome %s, you are logged" % user.name)
 
     return HTTPFound(location=request.route_path('home'))
 
