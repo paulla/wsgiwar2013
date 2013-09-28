@@ -1,0 +1,11 @@
+<metal:main use-macro="load: layout.pt" >
+  <div class="span9" metal:fill-slot="content">
+    <h1 i18n:translate=''>Almost done !</h1>
+
+    <div class="row">
+      <p class="span6">
+	Please, wait for our email.
+      </p>
+    </div>
+  </div>
+</metal:main>
