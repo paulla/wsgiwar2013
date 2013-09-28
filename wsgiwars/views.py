@@ -12,6 +12,7 @@ from pyramid_mailer.message import Message
 import bcrypt
 
 import couchdbkit
+from couchdbkit.designer import push
 
 from wsgiwars.models.user import User
 from wsgiwars.models.link import Link
@@ -24,9 +25,42 @@ db = server.get_or_create_db(settings['couchdb.db'])
 User.set_db(db)
 Link.set_db(db)
 
+push('couchdb/_design/user', db)
+
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
     return {'project': 'wsgiwars'}
+
+@view_config(route_name='delete_user')
+def delete(request):
+    #TODO if login
+    #TODO check is admin
+    user = User.get(request.matchdict['user'])
+    user.delete()
+    return HTTPFound(location=request.route_url('admin_list',page="0"))
+
+@view_config(route_name='admin')
+def admin(request):
+    return HTTPFound(location=request.route_url('admin_list',page="0"))
+
+@view_config(route_name='admin_list', renderer='templates/admin.pt')
+def admin_list(request):
+    #TODO if login
+    #TODO check is admin
+    skip = int(request.matchdict['page'])*10
+    users = User.view('user/all', skip = skip , limit = 10, descending=True)
+    return {'users': users}
+
+@view_config(route_name='admin_user', renderer='templates/admin_user.pt')
+def admin_user(request):
+    #TODO if login
+    #TODO check is admin
+    user = User.get(request.matchdict['user'])
+    if request.method == 'POST':
+        user.name = request.POST.get('name')
+        user.description = request.POST.get('description')
+        user.save()
+    return {'user' : user}
 
 @view_config(route_name='about', renderer='templates/about.pt')
 def about(request):

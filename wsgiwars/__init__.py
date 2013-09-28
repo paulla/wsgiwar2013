@@ -20,6 +20,10 @@ def main(global_config, **settings):
 
     config.add_route('home', '/')
     config.add_route('about', '/about')
+    config.add_route('admin', '/admin')
+    config.add_route('admin_list', '/admin/{page}')
+    config.add_route('admin_user', '/admin/detail/{user}')
+    config.add_route('delete_user', '/admin/delete/user/{user}')
 
     config.add_route('signup', '/signup')
     config.add_route('submitSignup', '/signup/submit')
