@@ -26,7 +26,7 @@
 	    <a class="logout" href="/signup" tal:condition="'username' not in request.session" i18n:translate=''>
 	      Sign up
 	    </a>
-	    <a class="logout" href="/about" tal:condition="'username' not in request.session" i18n:translate=''>
+	    <a href="/about" i18n:translate=''>
 	      About
 	    </a>
 	  </div>
@@ -50,7 +50,7 @@
 	    <a href="${request.route_path('home')}" i18n:translate='' class="new">Home</a>
 	  </li>
 	  <li tal:condition="'login' in request.session and request.path != '/add/link'">
-	    <a href="${request.route_path('addLink')}" i18n:translate='' class="new">Add a link</a>
+	    <a href="${request.route_path('addLink')}" i18n:translate='' class="new"><i class="icon-plus"></i> Add a link</a>
 	  </li>
 	</ul>
       </nav>
