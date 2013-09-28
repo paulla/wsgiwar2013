@@ -9,7 +9,7 @@
     </div>
 
      <div class="row">
-      <label class="span2" for="password" i18n:translate=''>password :</label>
+      <label class="span2" for="password" i18n:translate=''>Password :</label>
       <input class="span4" type="password" name="password" id="password" />
     </div>
 

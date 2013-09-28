@@ -24,6 +24,10 @@ User.set_db(db)
 def home(request):
     return {'project': 'wsgiwars'}
 
+@view_config(route_name='about', renderer='templates/about.pt')
+def about(request):
+    return {'project': 'wsgiwars'}
+
 @view_config(route_name='signup', renderer='templates/signup.pt')
 def signup(request):
     return {}
