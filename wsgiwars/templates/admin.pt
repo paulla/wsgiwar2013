@@ -13,13 +13,21 @@
            <th>delete</th>
        </tr>
    </thead>
- 
+
+   <tfoot>
+       <tr>
+           <th><a tal:condition="int(page)>int(0)" href="${request.route_path('admin_list',page=int(page)-int(1))}">Previous</a></th>
+           <th><a href="${request.route_path('admin_list',page=int(page)+int(1))}">Next</a></th>
+       </tr>
+   </tfoot>
+
    <tbody tal:repeat="user users">
        <tr>
            <td><a href="${request.route_path('admin_user',user=user._id)}">${user._id}</a></td>
            <td>${user.name}</td>
            <td>${user.description}</td>
-           <td><input type="checkbox" name="choix" />${user.is_admin}</td>
+           <td><input tal:condition="user.is_admin" type="checkbox" name="admin" readonly checked/>
+               <input tal:condition="user.is_admin is not True" type="checkbox" name="admin" readonly/></td>
            <td><a href="${request.route_path('delete_user',user=user._id)}">delete </a></td>
        </tr>
    </tbody>
