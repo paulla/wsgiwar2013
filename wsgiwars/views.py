@@ -30,6 +30,23 @@ def signup(request):
 def login(request):
     return {}
 
+@view_config(route_name='submitLogin')
+def submitLogin(request):
+    try:
+        user = User.get(request.POST['login'])
+    except couchdbkit.exceptions.ResourceNotFound:
+        # TODO flash
+        return HTTPFound(location=request.route_path('login'))
+
+    if bcrypt.hashpw(request.POST['password'], user.password) != user.password:
+        # TODO same flah
+        return HTTPFound(location=request.route_path('login'))
+
+    # TODO Flash
+
+    return HTTPFound(location=request.route_path('home'))
+
+
 @view_config(route_name='submitSignup', renderer='templates/signupSubmit.pt')
 def submitSignup(request):
     # TODO check is username isn't taken
