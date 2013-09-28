@@ -44,9 +44,11 @@
       <nav class="span2">
 	<ul class="nav nav-tabs nav-stacked">
 	  <li tal:condition='request.path != "/"'>
-	    <a href="${request.route_path('home')}" i18n:translate='' class="new">home</a>
+	    <a href="${request.route_path('home')}" i18n:translate='' class="new">Home</a>
 	  </li>
-	  <!-- TODO others -->
+	  <li tal:condition="'login' in request.session and request.path != '/add/link'">
+	    <a href="${request.route_path('addLink')}" i18n:translate='' class="new">Add a link</a>
+	  </li>
 	</ul>
       </nav>
 
