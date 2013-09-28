@@ -25,11 +25,11 @@ def submitSignup(request):
         # Mika64 : your job !
         password = bcrypt.hashpw(request.POST['password'], bcrypt.gensalt())
 
-        user = Users_db(username = request.POST['username'],
-                password = password,
-                avatar = request.POST['avatar'],
-                name = request.POST['name']
-                description = request.POST['description']
+        user = Users_db(_id=request.POST['username'],
+                password=password,
+                avatar=request.POST['avatar'],
+                name=request.POST['name'],
+                description=request.POST['description'],
                 )
 
         user.save()
