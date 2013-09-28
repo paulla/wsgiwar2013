@@ -1,28 +1,6 @@
 <metal:main use-macro="load: layout.pt" >
-  <div class="span9" metal:fill-slot="content">
-    <article tal:repeat="link links">
-      <div class="link span8" >
-	<div class="row">
-	  <a class="span6" href="${link.url}">${link.url}</a>
-	  <span class='span2'>
-	    <i class="icon-minus"></i>
-	    <a href="${request.route_path('user', userid=link.userID)}">
-	      ${link.username}
-	    </a>
-	  </span>
-	</div>
-	<div class="row">
-	  <a tal:repeat="tag link.tags" href="${request.route_path('tag', tag=tag)}">${tag}</a>
-	</div>
-	<div class="row">
-	  <p class="span7"><pre>${link.comment.strip()}</pre></p>
-	</div>
-      </div>
-      <tal:if condition='"login" in request.session'>
-	<a class="span1" tal:condition="request.session['login'] != link.userID" href="${request.route_path('copyLink', link=link._id)}">
-	  <i class="icon-plus"></i>
-	</a>
-      </tal:if>
+  <div class="span9" metal:fill-slot="content" tal:define="linkT load: subtemplates/link.pt" >
+    <article tal:repeat="link links" metal:use-macro="linkT">
     </article>
   </div>
 </metal:main>
