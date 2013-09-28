@@ -98,12 +98,15 @@ def submitSignup(request):
         password = bcrypt.hashpw(request.POST['password'].encode('utf-8'), bcrypt.gensalt())
 
         user = User(password=password,
-                    avatar=request.POST['avatar'],
                     name=request.POST['name'],
                     description=request.POST['description'],
                     )
         user._id = request.POST['login']
         user.save()
+
+        if request.POST['avatar']:
+            user.put_attachment(request.POST['avatar'].file, 'avatar')
+
 
         mailer = Mailer()
         message = Message(subject="Your subsription !",
