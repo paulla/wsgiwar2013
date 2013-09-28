@@ -250,3 +250,8 @@ def tag(request):
     links = Link.view('viewTag/all', limit=10, descending=True,
                       key=request.matchdict['tag'])
     return {'links': links}
+
+@view_config(route_name='logout')
+def logout(request):
+    request.session.delete()
+    return HTTPFound(location=request.route_path('home'))
