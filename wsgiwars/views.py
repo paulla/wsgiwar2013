@@ -289,7 +289,10 @@ def mylinks(request):
 
 @view_config(route_name="tag", renderer="templates/tag.pt")
 def tag(request):
-    links = Link.view('viewTag/all', limit=10, descending=True,
+    limit, page = limitAndPage(request)
+
+    links = Link.view('viewTag/all', limit=limit,
+                      descending=True, skip=page*limit,
                       key=request.matchdict['tag'])
     return {'links': links}
 
