@@ -273,7 +273,7 @@ def user(request):
                       startkey=[user._id, {}], endkey=[user._id],
                       include_docs=True)
 
-    return {'links': links, 'user': user, 'limit':limit, 'page': page}
+    return {'links': links, 'user': user, 'limit': limit, 'page': page}
 
 
 @view_config(route_name="mylinks", renderer="templates/mylinks.pt", logged=True)
@@ -285,7 +285,7 @@ def mylinks(request):
                       startkey=[request.session['login'], {}],
                       endkey=[request.session['login']], include_docs=True)
 
-    return {'links': links}
+    return {'links': links, 'limit': limit, 'page': page}
 
 
 @view_config(route_name="tag", renderer="templates/tag.pt")
@@ -296,7 +296,7 @@ def tag(request):
                       descending=True, skip=page*limit,
                       startkey=[request.matchdict['tag'], {}],
                       endkey=[request.matchdict['tag']])
-    return {'links': links}
+    return {'links': links, 'limit': limit, 'page': page}
 
 
 @view_config(route_name='logout', logged=True)
@@ -352,7 +352,7 @@ def contacts(request):
                       descending=True, skip=limit*page,
                       key=request.session['login'])
 
-    return {"users": users}
+    return {"users": users, 'limit': limit, 'page': page}
 
 
 @view_config(route_name='submitContact', renderer='templates/submit_contact.pt', logged=True)

@@ -70,6 +70,7 @@
 
     </div>
     <div id="pagination" metal:define-slot="pagination"></div>
+
     <div id="rss" metal:define-slot="rss"></div>
     </article>
 
