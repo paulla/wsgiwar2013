@@ -152,24 +152,28 @@ def admin_user(request):
 @view_config(route_name='about', renderer='templates/about.pt')
 def about(request):
     """
+    About page.
     """
     return {'project': 'wsgiwars'}
 
 @view_config(route_name='signup', renderer='templates/signup.pt')
 def signup(request):
     """
+    Signup page.
     """
     return {}
 
 @view_config(route_name='login', renderer='templates/login.pt')
 def login(request):
     """
+    login page.
     """
     return {}
 
 @view_config(route_name='submitLogin')
 def submitLogin(request):
     """
+    Action on login page.
     """
     flashError = "Sorry dude : wrong login or password"
 
@@ -203,6 +207,7 @@ def submitLogin(request):
              renderer='templates/signupSubmit.pt')
 def submitSignup(request):
     """
+    Action on submit page.
     """
     try:
         User.get(request.POST['login'])
@@ -268,6 +273,7 @@ def submitSignup(request):
              logged=True)
 def addlink(request):
     """
+    Add a link.
     """
     return {'link': None}
 
@@ -275,6 +281,7 @@ def addlink(request):
              logged=True)
 def copylink(request):
     """
+    Copy a link.
     """
     link = Link.get(request.matchdict['link'])
 
@@ -286,6 +293,7 @@ def copylink(request):
 @view_config(route_name='submitLink', logged=True)
 def submitlink(request):
     """
+    Submit a link.
     """
     # TODO check if not already submit by user
 
@@ -332,6 +340,7 @@ def user(request):
              logged=True)
 def mylinks(request):
     """
+    My link page.
     """
     limit, page = limitAndPage(request)
 
@@ -346,6 +355,7 @@ def mylinks(request):
 @view_config(route_name="tag", renderer="templates/tag.pt")
 def tag(request):
     """
+    Tag page.
     """
     limit, page = limitAndPage(request)
 
@@ -447,6 +457,7 @@ def submitContact(request):
              logged=True)
 def unfollow(request):
     """
+    Unfollow a contact.
     """
     try:
         user = User.get(request.matchdict['userid'].strip())
@@ -460,6 +471,7 @@ def unfollow(request):
 @view_config(route_name="confirmUnfollow", logged=True)
 def confirmUnfollow(request):
     """
+    Confirm page to unfollow a contact.
     """
     try:
         user = User.get(request.matchdict['userid'].strip())
@@ -479,6 +491,7 @@ def confirmUnfollow(request):
              logged=True)
 def profile(request):
     """
+    View profile page.
     """
     user = User.get(request.session['login'])
 
@@ -519,7 +532,6 @@ def profile(request):
         user.mail = request.POST['email']
         user.save()
         request.session.flash(u"Modification saved !")
-
     return {'user':user}
 
 @view_config(route_name='avatar')
@@ -533,9 +545,7 @@ def avatar(request):
 
     response = Response(content_type='image/jpeg',
                         body=user.fetch_attachment('avatar'))
-
     return response
-
 
 @view_config(route_name='comment', renderer='templates/addComment.pt', \
              logged = True)
@@ -557,14 +567,16 @@ def comment(request):
 @view_config(route_name= 'rmLink', logged=True)
 def rmlink(request):
     """
+    Delete a link.
     """
     link = Link.get(request.matchdict['link'])
     link.delete()
     return HTTPFound(location=request.route_path('mylinks'))
 
 @view_config(route_name= 'rmComment', logged=True)
-def rmlink(request):
+def rmComment(request):
     """
+    Delete a comment.
     """
     link = Link.get(request.matchdict['link'])
     comment = [comment for comment in link.comments if \
