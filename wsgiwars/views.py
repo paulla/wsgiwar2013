@@ -371,3 +371,13 @@ def submitContact(request):
 
     request.session.flash("You follow %s." % user.name)
     return HTTPFound(location=request.route_path('contacts'))
+
+@view_config(route_name="unfollow", renderer='templates/unfollow.pt', logged=True)
+def unfollow(request):
+    try:
+        user = User.get(request.matchdict['userid'].strip())
+    except couchdbkit.exceptions.ResourceNotFound:
+        request.session.flash("Sorry, we don't find your buddy.")
+        return HTTPFound(location=request.route_path('contacts'))
+
+    return {"user": user}
