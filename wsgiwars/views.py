@@ -1,11 +1,12 @@
 import datetime
+import tempfile
+import os
 
 from pyramid.view import view_config
 from pyramid.threadlocal import get_current_registry
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.security import remember
-from pyramid.security import forget
 
 from pyramid_mailer.mailer import Mailer
 from pyramid_mailer.message import Message
@@ -14,6 +15,8 @@ import bcrypt
 
 import couchdbkit
 from couchdbkit.designer import push
+
+from PIL import Image
 
 from wsgiwars.models.user import User
 from wsgiwars.models.link import Link
@@ -34,6 +37,7 @@ for view in ['couchdb/_design/user',
              'couchdb/_design/viewFollowers', ]:
     push(view, db)
 
+avatarSize = 128,128
 
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
@@ -94,7 +98,6 @@ def login(request):
 
 @view_config(route_name='submitLogin')
 def submitLogin(request):
-
     flashError = "Sorry dude : wrong login or password"
 
     if not request.POST['password'].strip():
@@ -151,8 +154,25 @@ def submitSignup(request):
         user._id = request.POST['login']
         user.save()
 
-        if request.POST['avatar']:
-            user.put_attachment(request.POST['avatar'].file, 'avatar')
+        if hasattr(request.POST['avatar'], 'filename'):
+            tmph, originImage = tempfile.mkstemp(dir=settings['tmp'], suffix="original")
+            os.close(tmph)
+
+            tmph, thumbImage = tempfile.mkstemp(dir=settings['tmp'], suffix="thumb")
+            os.close(tmph)
+
+            with open(originImage, 'wb') as tmp:
+                tmp.write(request.POST['avatar'].file.read())
+
+            fullSize = Image.open(originImage)
+            fullSize.thumbnail(avatarSize, Image.ANTIALIAS)
+            fullSize.save(thumbImage , "JPEG")
+
+            with open(thumbImage, 'rb') as thumb:
+                user.put_attachment(thumb, 'avatar')
+
+            os.remove(originImage)
+            os.remove(thumbImage)
 
         mailer = Mailer()
         message = Message(subject="Your subsription !",

@@ -23,6 +23,7 @@ requires = [
     'js.bootstrap',
     'css.fontawesome',
     'pyramid_mailer',
+    'pillow',
     ]
 
 setup(name='wsgiwars',
