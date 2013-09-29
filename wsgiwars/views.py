@@ -283,7 +283,8 @@ def mylinks(request):
 
     links = Link.view('my_link/all', limit=limit,
                       descending=True, skip=page*limit,
-                      key=request.session['login'])
+                      startkey=[request.session['login'], {}],
+                      endkey=[request.session['login']], include_docs=True)
 
     return {'links': links}
 
