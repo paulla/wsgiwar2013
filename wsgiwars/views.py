@@ -196,7 +196,7 @@ def submitLogin(request):
 
     if not user.checked:
         request.session.flash(u"please confirm you mail before")
-        return HTTPFound(location=request.route_path('home'))
+        return HTTPFound(location=request.route_path('login'))
 
     request.session.flash(u"welcome %s, you are logged" % user.name)
 
