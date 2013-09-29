@@ -3,7 +3,7 @@ function(doc) {
     {
 	if(doc.private == false)
 	{
-	    emit(doc._id, doc);
+	    emit(doc.created, doc);
 	}
  }
 }

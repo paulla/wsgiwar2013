@@ -49,5 +49,8 @@ setup(name='wsgiwars',
       entry_points="""\
       [paste.app_factory]
       main = wsgiwars:main
+      [console_scripts]
+      setAdmin = wsgiwars.utils:setAdmin
+
       """,
       )
