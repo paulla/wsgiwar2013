@@ -278,8 +278,10 @@ def user(request):
 
 @view_config(route_name="mylinks", renderer="templates/mylinks.pt", logged=True)
 def mylinks(request):
-    # TODO check if log
-    links = Link.view('my_link/all', limit=10, descending=True,
+    limit, page = limitAndPage(request)
+
+    links = Link.view('my_link/all', limit=limit,
+                      descending=True, skip=page*limit,
                       key=request.session['login'])
 
     return {'links': links}
