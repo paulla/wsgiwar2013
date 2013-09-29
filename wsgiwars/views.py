@@ -352,7 +352,7 @@ def contacts(request):
                       descending=True, skip=limit*page,
                       key=request.session['login'])
 
-    return {"users": users}
+    return {"users": users, 'limit': limit, 'page': page}
 
 
 @view_config(route_name='submitContact', renderer='templates/submit_contact.pt', logged=True)
