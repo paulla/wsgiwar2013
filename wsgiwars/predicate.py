@@ -1,11 +1,13 @@
 class LoggedPredicate(object):
+
     """
     """
+
     def __init__(self, val, config):
         self._val = val
 
     def text(self):
-           return 'predicat on login'
+        return 'predicat on login'
 
     phash = text
 

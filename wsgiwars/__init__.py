@@ -6,6 +6,7 @@ from pyramid.threadlocal import get_current_registry
 
 from wsgiwars.predicate import LoggedPredicate
 
+
 def main(global_config, **settings):
     """ This function returns a Pyramid WSGI application.
     """
@@ -62,15 +63,14 @@ def main(global_config, **settings):
                     'pyramid_fanstatic',
                     'pyramid_chameleon',
                     'pyramid_beaker',
-                    'rebecca.fanstatic',]:
+                    'rebecca.fanstatic', ]:
 
         config.include(include)
 
     config.add_fanstatic_resources(['js.bootstrap.bootstrap',
                                     'js.bootstrap.bootstrap_responsive_css',
                                     'css.fontawesome.fontawesome',
-                                    ]
-                                   , r'.*\.pt')
+                                    ], r'.*\.pt')
 
     config.scan()
     return config.make_wsgi_app()

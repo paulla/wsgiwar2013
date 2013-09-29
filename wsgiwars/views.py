@@ -31,7 +31,7 @@ for view in ['couchdb/_design/user',
              'couchdb/_design/user_link',
              'couchdb/_design/my_link',
              'couchdb/_design/viewTag',
-             'couchdb/_design/viewFollowers',]:
+             'couchdb/_design/viewFollowers', ]:
     push(view, db)
 
 
@@ -41,6 +41,7 @@ def home(request):
 
     return {'project': 'wsgiwars',
             'links': links}
+
 
 @view_config(route_name='delete_user', logged=True)
 def delete(request):
@@ -53,7 +54,8 @@ def delete(request):
         return HTTPFound(location=request.route_url('home'))
     user = User.get(request.matchdict['user'])
     user.delete()
-    return HTTPFound(location=request.route_url('admin_list',page="0"))
+    return HTTPFound(location=request.route_url('admin_list', page="0"))
+
 
 @view_config(route_name='admin', logged=True)
 def admin(request):
@@ -64,7 +66,8 @@ def admin(request):
     if not User.get(admin).is_admin:
         request.session.flash(u"Sorry dude : Can't read this page")
         return HTTPFound(location=request.route_url('home'))
-    return HTTPFound(location=request.route_url('admin_list',page="0"))
+    return HTTPFound(location=request.route_url('admin_list', page="0"))
+
 
 @view_config(route_name='admin_list', renderer='templates/admin.pt', logged=True)
 def admin_list(request):
@@ -75,10 +78,11 @@ def admin_list(request):
     if not User.get(admin).is_admin:
         request.session.flash(u"Sorry dude : Can't read this page")
         return HTTPFound(location=request.route_url('home'))
-    skip = int(request.matchdict['page'])*10
-    users = User.view('user/all', skip = skip , limit = 10, descending=True)
+    skip = int(request.matchdict['page']) * 10
+    users = User.view('user/all', skip=skip, limit=10, descending=True)
     return {'users': users,
             'page': request.matchdict['page']}
+
 
 @view_config(route_name='admin_user', renderer='templates/admin_user.pt', logged=True)
 def admin_user(request):
@@ -98,19 +102,23 @@ def admin_user(request):
         else:
             user.is_admin = False
         user.save()
-    return {'user' : user}
+    return {'user': user}
+
 
 @view_config(route_name='about', renderer='templates/about.pt')
 def about(request):
     return {'project': 'wsgiwars'}
 
+
 @view_config(route_name='signup', renderer='templates/signup.pt')
 def signup(request):
     return {}
 
+
 @view_config(route_name='login', renderer='templates/login.pt')
 def login(request):
     return {}
+
 
 @view_config(route_name='submitLogin')
 def submitLogin(request):
@@ -127,8 +135,8 @@ def submitLogin(request):
         request.session.flash(flashError)
         return HTTPFound(location=request.route_path('login'))
 
-    if bcrypt.hashpw(request.POST['password'].encode('utf-8'), \
-                    user.password) != user.password:
+    if bcrypt.hashpw(request.POST['password'].encode('utf-8'),
+                     user.password) != user.password:
         request.session.flash(flashError)
 
         return HTTPFound(location=request.route_path('login'))
@@ -144,8 +152,8 @@ def submitLogin(request):
     return HTTPFound(location=request.route_path('home'), headers=headers)
 
 
-@view_config(route_name='submitSignup', \
-            renderer='templates/signupSubmit.pt')
+@view_config(route_name='submitSignup',
+             renderer='templates/signupSubmit.pt')
 def submitSignup(request):
 
     try:
@@ -161,8 +169,8 @@ def submitSignup(request):
         return HTTPFound(location=request.route_path('signup'))
 
     if request.POST['password'] == request.POST['confirmPassword']:
-        password = bcrypt.hashpw(request.POST['password'].encode('utf-8'), \
-                                bcrypt.gensalt())
+        password = bcrypt.hashpw(request.POST['password'].encode('utf-8'),
+                                 bcrypt.gensalt())
 
         user = User(password=password,
                     name=request.POST['name'],
@@ -174,13 +182,11 @@ def submitSignup(request):
         if request.POST['avatar']:
             user.put_attachment(request.POST['avatar'].file, 'avatar')
 
-
         mailer = Mailer()
         message = Message(subject="Your subsription !",
                           sender=settings['mail_from'],
                           recipients=[request.POST['email']],
-                          body="Confirm the link") # TODO add link
-
+                          body="Confirm the link")  # TODO add link
 
         mailer.send(message)
 
@@ -190,9 +196,11 @@ def submitSignup(request):
 
         return HTTPFound(location=request.route_path('signup'))
 
+
 @view_config(route_name='addLink', renderer='templates/addlink.pt', logged=True)
 def addlink(request):
     return {'link': None}
+
 
 @view_config(route_name='copyLink', renderer='templates/addlink.pt', logged=True)
 def copylink(request):
@@ -203,11 +211,12 @@ def copylink(request):
 
     return {'link': link}
 
+
 @view_config(route_name='submitLink', logged=True)
 def submitlink(request):
 
-    #TODO check logged
-    #TODO check if not already submit by user
+    # TODO check logged
+    # TODO check if not already submit by user
 
     tags = [tag.strip() for tag in request.POST['tags'].split(',')]
 
@@ -228,13 +237,15 @@ def submitlink(request):
     request.session.flash("link added !")
     return HTTPFound(location=request.route_path('home'))
 
-@view_config(route_name="changePassword", \
-            renderer="templates/changePassword.pt")
+
+@view_config(route_name="changePassword",
+             renderer="templates/changePassword.pt")
 def changePassword(request):
     return {}
 
-@view_config(route_name="submitChangePassword", \
-            renderer="templates/submitChangePassword.pt")
+
+@view_config(route_name="submitChangePassword",
+             renderer="templates/submitChangePassword.pt")
 def submitChangePassword(request):
     """
     Change user password.
@@ -257,11 +268,13 @@ def submitChangePassword(request):
         return HTTPFound(location=request.route_path('changePassword'))
 
     if not user.password == bcrypt.hashpw(request.POST['initPassword'].encode('utf-8'), user.password):
-        request.session.flash(u"Actual password does not match with register password")
+        request.session.flash(
+            u"Actual password does not match with register password")
         return HTTPFound(location=request.route_path('changePassword'))
 
     if request.POST['newPassword'] == request.POST['confirmPassword']:
-        password = bcrypt.hashpw( request.POST['newPassword'].encode('utf-8'), bcrypt.gensalt())
+        password = bcrypt.hashpw(
+            request.POST['newPassword'].encode('utf-8'), bcrypt.gensalt())
         user.password = password
         user.save()
         request.session.flash(u"Change done!")
@@ -269,6 +282,7 @@ def submitChangePassword(request):
     else:
         request.session.flash(u"Password does not match")
         return HTTPFound(location=request.route_path('changePassword'))
+
 
 @view_config(route_name="user", renderer="templates/user.pt")
 def user(request):
@@ -279,9 +293,8 @@ def user(request):
     except couchdbkit.exceptions.ResourceNotFound:
         return HTTPNotFound()
 
-
-    links = Link.view('user_link/all',  limit=10, \
-                     descending=True, key=user._id)
+    links = Link.view('user_link/all',  limit=10,
+                      descending=True, key=user._id)
 
     return {'links': links, 'user': user}
 
@@ -294,16 +307,19 @@ def mylinks(request):
 
     return {'links': links}
 
+
 @view_config(route_name="tag", renderer="templates/tag.pt")
 def tag(request):
     links = Link.view('viewTag/all', limit=10, descending=True,
                       key=request.matchdict['tag'])
     return {'links': links}
 
+
 @view_config(route_name='logout', logged=True)
 def logout(request):
     request.session.delete()
     return HTTPFound(location=request.route_path('home'))
+
 
 @view_config(route_name='rss', renderer='templates/rss.pt')
 def rss(request):
@@ -327,9 +343,11 @@ def userrss(request):
     except couchdbkit.exceptions.ResourceNotFound:
         return HTTPNotFound()
 
-    links = Link.view('user_link/all',  limit=10, descending=True, key=user._id)
+    links = Link.view(
+        'user_link/all',  limit=10, descending=True, key=user._id)
 
     return {'links': links, 'user': user}
+
 
 @view_config(route_name='link', renderer='templates/link.pt')
 def link(request):
@@ -347,7 +365,7 @@ def contacts(request):
                       descending=True,
                       key=request.session['login'])
 
-    return {"users" :users}
+    return {"users": users}
 
 
 @view_config(route_name='submitContact', renderer='templates/submit_contact.pt', logged=True)
@@ -371,6 +389,7 @@ def submitContact(request):
 
     request.session.flash("You follow %s." % user.name)
     return HTTPFound(location=request.route_path('contacts'))
+
 
 @view_config(route_name="unfollow", renderer='templates/unfollow.pt', logged=True)
 def unfollow(request):
@@ -396,5 +415,5 @@ def confirmUnfollow(request):
 
     user.save()
 
-    request.session.flash("You don't follower %s anymore" % user.name )
+    request.session.flash("You don't follower %s anymore" % user.name)
     return HTTPFound(location=request.route_path('contacts'))
