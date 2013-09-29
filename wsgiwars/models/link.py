@@ -10,3 +10,4 @@ class Link(couchdbkit.Document):
     username = couchdbkit.StringProperty()
     tags = couchdbkit.StringListProperty()
     private = couchdbkit.BooleanProperty()
+    comments = couchdbkit.ListProperty()

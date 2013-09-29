@@ -41,6 +41,7 @@ def main(global_config, **settings):
 
     config.add_route("copyLink", '/copy/{link}')
     config.add_route("link", '/link/{link}')
+    config.add_route('comment', '/comment/{link}')
 
     config.add_route("mylinks", '/mylinks')
     config.add_route('user', '/user/{userid}')

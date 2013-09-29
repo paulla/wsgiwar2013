@@ -15,6 +15,9 @@
     <div class="row">
       <p class="span7"><pre>${link.comment.strip()}</pre></p>
     </div>
+    <div class="row">
+        <a class="span6" href="${request.route_path('comment', link=link._id)}">Comments</a>
+    </div>    
   </div>
   <tal:if condition='"login" in request.session'>
     <a class="span1" tal:condition="request.session['login'] != link.userID" href="${request.route_path('copyLink', link=link._id)}">
