@@ -285,7 +285,7 @@ def mylinks(request):
                       startkey=[request.session['login'], {}],
                       endkey=[request.session['login']], include_docs=True)
 
-    return {'links': links}
+    return {'links': links, 'limit':limit, 'page': page}
 
 
 @view_config(route_name="tag", renderer="templates/tag.pt")
