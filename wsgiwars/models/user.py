@@ -37,3 +37,5 @@ class User(couchdbkit.Document):
     is_admin = couchdbkit.BooleanProperty()
     followers = couchdbkit.StringListProperty()
     mail = couchdbkit.StringProperty()
+    random = couchdbkit.IntegerProperty()
+    checked = couchdbkit.BooleanProperty()

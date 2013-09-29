@@ -28,6 +28,7 @@
 import datetime
 import tempfile
 import os
+import random
 
 from pyramid.view import view_config
 from pyramid.threadlocal import get_current_registry
@@ -193,6 +194,10 @@ def submitLogin(request):
 
         return HTTPFound(location=request.route_path('login'))
 
+    if not user.checked:
+        request.session.flash(u"please confirm you mail before")
+        return HTTPFound(location=request.route_path('home'))
+
     request.session.flash(u"welcome %s, you are logged" % user.name)
 
     headers = remember(request, user._id)
@@ -233,6 +238,8 @@ def submitSignup(request):
                     name=request.POST['name'],
                     description=request.POST['description'],
                     mail=request.POST['email'],
+                    random=random.randint(1,1000000000),
+                    checked = False
                     )
         user._id = request.POST['login']
         user.save()
@@ -259,11 +266,15 @@ def submitSignup(request):
             os.remove(originImage)
             os.remove(thumbImage)
 
+        confirm_link = request.route_url('checkLogin', 
+                userid = user._id, 
+                randomid = user.random)
+
         mailer = Mailer()
         message = Message(subject="Your subsription !",
                           sender=settings['mail_from'],
                           recipients=[request.POST['email']],
-                          body="Confirm the link")  # TODO add link
+                          body="Confirm the link\n\n%s" % confirm_link)  # TODO add link
 
         mailer.send_immediately(message, fail_silently=False)
 
@@ -520,7 +531,7 @@ def profile(request):
                              sender=settings['mail_from'], \
                              recipients=user.mail, \
                              body="Your account have been deleted")
-            mailer.send(message)
+            mailer.send_immediately(message, fail_silently=False)
             return HTTPFound(location=request.route_path('home'))
 
         if request.POST['newPassword'].strip():
@@ -590,3 +601,53 @@ def rmComment(request):
     link.save()
     #request.session.flash(u"Unknow Error")
     return HTTPFound(location=request.route_path('comment', link=link._id))
+
+@view_config(route_name='checkLogin', renderer='templates/confirm.pt')
+def checkLogin(request):
+    """
+    Validate inscription
+    """
+    user = User.get(request.matchdict['userid'])
+    if user.checked:
+        request.session.flash(u"Already confirmed!")
+        return HTTPFound(location=request.route_path('home'))
+    if user.random == int(request.matchdict['randomid']):
+        return {'user' : user}
+    return HTTPFound(location=request.route_path('home'))
+
+@view_config(route_name='submitcheckLogin')
+def submitcheckLogin(request):
+    """
+    submit checklogin
+    """
+    user = User.get(request.matchdict['userid'])
+    flashError = "Sorry dude : wrong login or password"
+
+    if not request.POST['password'].strip():
+        request.session.flash(flashError)
+        return HTTPFound(location=request.route_path('login'))
+
+    try:
+        user = User.get(request.POST['login'])
+    except couchdbkit.exceptions.ResourceNotFound:
+        request.session.flash(flashError)
+        return HTTPFound(location=request.route_path('login'))
+
+    if bcrypt.hashpw(request.POST['password'].encode('utf-8'),
+                     user.password) != user.password:
+        request.session.flash(flashError)
+
+        return HTTPFound(location=request.route_path('login'))
+
+    request.session.flash(u"Welcome %s, you have confirm your account" % user.name)
+
+    user.checked = True
+    user.save()
+
+    headers = remember(request, user._id)
+    request.session['username'] = user.name
+    request.session['login'] = user._id
+    request.session['is_admin'] = user.is_admin
+    request.session.save()
+
+    return HTTPFound(location=request.route_path('home'), headers=headers)

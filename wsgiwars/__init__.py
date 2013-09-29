@@ -62,6 +62,8 @@ def main(global_config, **settings):
     config.add_route('logout', '/logout')
     config.add_route('login', '/login')
     config.add_route('submitLogin', '/login/submit')
+    config.add_route('checkLogin', '/check/{userid}/{randomid}')
+    config.add_route('submitcheckLogin', '/check/{userid}/{randomid}/submit')
 
     config.add_route('addLink', '/link/add')
     config.add_route('submitLink', '/link/submit')
