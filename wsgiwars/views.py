@@ -221,6 +221,10 @@ def submitSignup(request):
         request.session.flash(u"You realy need a password")
         return HTTPFound(location=request.route_path('signup'))
 
+    if not len(request.POST['password'].strip()) >= 8:
+        request.session.flash(u"Password must have at least 8 characters")
+        return HTTPFound(location=request.route_path('signup'))
+
     if request.POST['password'] == request.POST['confirmPassword']:
         password = bcrypt.hashpw(request.POST['password'].encode('utf-8'),
                                  bcrypt.gensalt())
