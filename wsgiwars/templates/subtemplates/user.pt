@@ -1,0 +1,15 @@
+<article>
+  <div class="user span8" >
+    <div class="row span7">
+      <a href="${request.route_path('user', userid=user._id)}">${user.name}</a>
+    </div>
+    <div class='row span7'>
+      <p>
+	<pre>${user.description.strip()}</pre>
+      </p>
+    </div>
+    <div class="span1">
+      <a href="${request.route_path('unfollow', userid=user._id)}"><i class="icon-trash"></i></a>
+    </div>
+  </div>
+</article>

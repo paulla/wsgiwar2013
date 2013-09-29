@@ -1,0 +1,15 @@
+<metal:main use-macro="load: layout.pt" >
+  <div class="span9" metal:fill-slot="content" tal:define="userT load: subtemplates/user.pt" >
+    <h1 i18n:translate=''>Your contacts</h1>
+    <form action="${request.route_path('submitContact')}" method="POST">
+      <div class="row">
+	<label for="contact" class="span2" i18n:translate="">Contact ID :</label>
+	<input class="span3" type="text" placeholder="Your contact id here." name="contactid" id="contactid"/>
+	<input class="span2 btn btn-success" type="submit" value="Add !"/>
+      </div>
+
+    </form>
+    <article tal:repeat="user users" metal:use-macro="userT">
+    </article>
+  </div>
+</metal:main>
