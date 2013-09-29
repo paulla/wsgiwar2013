@@ -271,7 +271,8 @@ def user(request):
 
     links = Link.view('user_link/all',  limit=limit,
                       skip=limit*page, descending=True,
-                      key=user._id)
+                      startkey=[user._id, {}], endkey=[user._id],
+                      include_docs=True)
 
     return {'links': links, 'user': user}
 
