@@ -69,6 +69,7 @@ avatarSize = 128,128
 
 def limitAndPage(request):
     """
+    Set the limit and default page.
     """
     # TODO validators ?
     limit = 10
@@ -89,6 +90,7 @@ def limitAndPage(request):
             pass
 
     return limit, page
+
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
     """
@@ -130,7 +132,6 @@ def admin_list(request):
     return {'users': users,
             'page': page}
 
-
 @view_config(route_name='admin_user', renderer='templates/admin_user.pt', \
              logged=True, is_admin=True)
 def admin_user(request):
@@ -148,13 +149,11 @@ def admin_user(request):
         user.save()
     return {'user': user}
 
-
 @view_config(route_name='about', renderer='templates/about.pt')
 def about(request):
     """
     """
     return {'project': 'wsgiwars'}
-
 
 @view_config(route_name='signup', renderer='templates/signup.pt')
 def signup(request):
@@ -569,7 +568,7 @@ def rmlink(request):
     """
     link = Link.get(request.matchdict['link'])
     comment = [comment for comment in link.comments if \
-            comment['author'] == request.session['login'] and\
+            comment['author'] == request.session['login'] and \
             str(comment['date']) == request.matchdict['date']][0]
     link.comments.remove(comment)
     link.save()
