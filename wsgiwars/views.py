@@ -343,8 +343,10 @@ def link(request):
 
 @view_config(route_name='contacts', renderer='templates/contacts.pt', logged=True)
 def contacts(request):
-    users = User.view('viewFollowers/all', limit=10,
-                      descending=True,
+    limit, page = limitAndPage(request)
+
+    users = User.view('viewFollowers/all', limit=limit,
+                      descending=True, skip=limit*page,
                       key=request.session['login'])
 
     return {"users": users}
