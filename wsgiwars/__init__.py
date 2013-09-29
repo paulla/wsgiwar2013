@@ -4,7 +4,7 @@ from pyramid_beaker import set_cache_regions_from_settings
 
 from pyramid.threadlocal import get_current_registry
 
-from wsgiwars.predicate import LoggedPredicate
+from wsgiwars.predicate import LoggedPredicate, Is_AdminPredicate
 
 
 def main(global_config, **settings):
@@ -24,7 +24,7 @@ def main(global_config, **settings):
     config.add_route('home', '/')
     config.add_route('about', '/about')
     config.add_route('admin', '/admin')
-    config.add_route('admin_list', '/admin/{page}')
+    config.add_route('admin_list', '/admin/users/{page}')
     config.add_route('admin_user', '/admin/detail/{user}')
     config.add_route('delete_user', '/admin/delete/user/{user}')
 
@@ -58,6 +58,7 @@ def main(global_config, **settings):
     config.add_route('confirmUnfollow', '/confirmUnfollow/{userid}')
 
     config.add_view_predicate('logged', LoggedPredicate)
+    config.add_view_predicate('is_admin', Is_AdminPredicate)
 
     for include in ['pyramid_mailer',
                     'pyramid_fanstatic',

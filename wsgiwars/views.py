@@ -43,56 +43,28 @@ def home(request):
             'links': links}
 
 
-@view_config(route_name='delete_user', logged=True)
+@view_config(route_name='delete_user', logged=True, is_admin=True)
 def delete(request):
-    if not 'login' in request.session:
-        request.session.flash(u"Sorry dude : Can't read this page")
-        return HTTPFound(location=request.route_url('home'))
-    admin = request.session['login']
-    if not User.get(admin).is_admin:
-        request.session.flash(u"Sorry dude : Can't read this page")
-        return HTTPFound(location=request.route_url('home'))
     user = User.get(request.matchdict['user'])
     user.delete()
     return HTTPFound(location=request.route_url('admin_list', page="0"))
 
 
-@view_config(route_name='admin', logged=True)
+@view_config(route_name='admin', logged=True,  is_admin=True)
 def admin(request):
-    if not 'login' in request.session:
-        request.session.flash(u"Sorry dude : Can't read this page")
-        return HTTPFound(location=request.route_url('home'))
-    admin = request.session['login']
-    if not User.get(admin).is_admin:
-        request.session.flash(u"Sorry dude : Can't read this page")
-        return HTTPFound(location=request.route_url('home'))
     return HTTPFound(location=request.route_url('admin_list', page="0"))
 
 
-@view_config(route_name='admin_list', renderer='templates/admin.pt', logged=True)
+@view_config(route_name='admin_list', renderer='templates/admin.pt', logged=True, is_admin=True)
 def admin_list(request):
-    if not 'login' in request.session:
-        request.session.flash(u"Sorry dude : Can't read this page")
-        return HTTPFound(location=request.route_url('home'))
-    admin = request.session['login']
-    if not User.get(admin).is_admin:
-        request.session.flash(u"Sorry dude : Can't read this page")
-        return HTTPFound(location=request.route_url('home'))
     skip = int(request.matchdict['page']) * 10
     users = User.view('user/all', skip=skip, limit=10, descending=True)
     return {'users': users,
             'page': request.matchdict['page']}
 
 
-@view_config(route_name='admin_user', renderer='templates/admin_user.pt', logged=True)
+@view_config(route_name='admin_user', renderer='templates/admin_user.pt', logged=True, is_admin=True)
 def admin_user(request):
-    if not 'login' in request.session:
-        request.session.flash(u"Sorry dude : Can't read this page")
-        return HTTPFound(location=request.route_url('home'))
-    admin = request.session['login']
-    if not User.get(admin).is_admin:
-        request.session.flash(u"Sorry dude : Can't read this page")
-        return HTTPFound(location=request.route_url('home'))
     user = User.get(request.matchdict['user'])
     if request.method == 'POST':
         user.name = request.POST.get('name')
@@ -215,7 +187,6 @@ def copylink(request):
 @view_config(route_name='submitLink', logged=True)
 def submitlink(request):
 
-    # TODO check logged
     # TODO check if not already submit by user
 
     tags = [tag.strip() for tag in request.POST['tags'].split(',')]
