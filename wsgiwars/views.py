@@ -524,14 +524,15 @@ def profile(request):
             return {'user':user}
 
         if request.POST['submitDelete']:
-            request.session.delete()
-            user.delete()
+            #request.session.delete()
             mailer = Mailer()
-            message = Message(subject="Account deleted", \
-                             sender=settings['mail_from'], \
-                             recipients=user.mail, \
+            message = Message(subject="Account deleted", 
+                             sender=settings['mail_from'], 
+                             recipients=[user.mail], 
                              body="Your account have been deleted")
             mailer.send_immediately(message, fail_silently=False)
+            user.delete()
+            request.session.delete()
             return HTTPFound(location=request.route_path('home'))
 
         if request.POST['newPassword'].strip():
