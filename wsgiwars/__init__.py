@@ -62,7 +62,7 @@ def main(global_config, **settings):
         config.include(include)
 
     config.add_fanstatic_resources(['js.bootstrap.bootstrap',
-                                    'js.bootstrap.bootstrap',
+                                    'js.bootstrap.bootstrap_responsive_css',
                                     'css.fontawesome.fontawesome',
                                     ]
                                    , r'.*\.pt')
