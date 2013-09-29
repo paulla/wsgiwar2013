@@ -5,7 +5,7 @@ function(doc) {
 	{
 	    doc.tags.forEach(function(tag)
 			     {
-				 emit(tag, doc);
+				 emit([tag, doc.created], doc);
 			     })
 	}
     }

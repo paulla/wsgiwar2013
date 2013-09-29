@@ -295,7 +295,8 @@ def tag(request):
 
     links = Link.view('viewTag/all', limit=limit,
                       descending=True, skip=page*limit,
-                      key=request.matchdict['tag'])
+                      startkey=[request.matchdict['tag'], {}],
+                      endkey=[request.matchdict['tag']])
     return {'links': links}
 
 
@@ -314,7 +315,8 @@ def rss(request):
 @view_config(route_name="tagrss", renderer="templates/tagrss.pt")
 def tagrss(request):
     links = Link.view('viewTag/all', limit=10, descending=True,
-                      key=request.matchdict['tag'])
+                      startkey=[request.matchdict['tag'], {}],
+                      endkey=[request.matchdict['tag']])
     return {'links': links}
 
 
