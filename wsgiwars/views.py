@@ -44,8 +44,7 @@ avatarSize = 128,128
 def home(request):
     links = Link.view('public/all',  limit=10, descending=True)
 
-    return {'project': 'wsgiwars',
-            'links': links}
+    return {'links': links}
 
 
 @view_config(route_name='delete_user', logged=True, is_admin=True)
