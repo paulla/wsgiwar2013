@@ -461,7 +461,7 @@ def avatar(request):
     return response
 
 
-@view_config(route_name='comment', renderer='templates/addComment.pt')
+@view_config(route_name='comment', renderer='templates/addComment.pt', logged = True)
 def comment(request):
     link = Link.get(request.matchdict['link'])
     if request.method == 'POST':
@@ -474,3 +474,20 @@ def comment(request):
         link.save()
         request.session.flash(u"Comment Added!")
     return{'link': link}
+
+@view_config(route_name= 'rmLink', logged=True)
+def rmlink(request):
+    link = Link.get(request.matchdict['link'])
+    link.delete()
+    return HTTPFound(location=request.route_path('mylinks'))
+
+@view_config(route_name= 'rmComment', logged=True)
+def rmlink(request):
+    link = Link.get(request.matchdict['link'])
+    comment = [comment for comment in link.comments if \
+            comment['author'] == request.session['login'] and\
+            str(comment['date']) == request.matchdict['date']][0]
+    link.comments.remove(comment)
+    link.save()
+    #request.session.flash(u"Unknow Error")
+    return HTTPFound(location=request.route_path('comment', link=link._id))
