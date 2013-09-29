@@ -1,3 +1,30 @@
+############################################################################
+# The MIT License (MIT)
+#
+# Copyright (c) 2013 PauLLA
+#
+# Permission is hereby granted, free of charge, to any person obtaining a 
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation 
+# the rights to use, copy, modify, merge, publish, distribute, sublicense, 
+# and/or sell copies of the Software, and to permit persons to whom the 
+# Software is furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNES FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+# DEALINGS IN THE SOFTWARE.
+############################################################################
+
+""" PauLLA WSGI Wrestle 2013 Delicious like
+"""
+
 import datetime
 import tempfile
 import os
@@ -41,6 +68,8 @@ for view in ['couchdb/_design/user',
 avatarSize = 128,128
 
 def limitAndPage(request):
+    """
+    """
     # TODO validators ?
     limit = 10
     page = 0
@@ -62,16 +91,20 @@ def limitAndPage(request):
     return limit, page
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
-
+    """
+    """
     limit, page = limitAndPage(request)
 
-    links = Link.view('public/all',  limit=limit, descending=True, skip=limit*page)
+    links = Link.view('public/all',  limit=limit, descending=True, \
+                      skip=limit*page)
 
     return {'links': links, 'page': page, 'limit':limit}
 
 
 @view_config(route_name='delete_user', logged=True, is_admin=True)
 def delete(request):
+    """
+    """
     user = User.get(request.matchdict['user'])
     user.delete()
     return HTTPFound(location=request.route_url('admin_list', page="0"))
@@ -79,11 +112,16 @@ def delete(request):
 
 @view_config(route_name='admin', logged=True,  is_admin=True)
 def admin(request):
+    """
+    """
     return HTTPFound(location=request.route_url('admin_list', page="0"))
 
 
-@view_config(route_name='admin_list', renderer='templates/admin.pt', logged=True, is_admin=True)
+@view_config(route_name='admin_list', renderer='templates/admin.pt', \
+             logged=True, is_admin=True)
 def admin_list(request):
+    """
+    """
     limit, page = limitAndPage(request)
 
     skip = limit*page
@@ -93,8 +131,11 @@ def admin_list(request):
             'page': page}
 
 
-@view_config(route_name='admin_user', renderer='templates/admin_user.pt', logged=True, is_admin=True)
+@view_config(route_name='admin_user', renderer='templates/admin_user.pt', \
+             logged=True, is_admin=True)
 def admin_user(request):
+    """
+    """
     user = User.get(request.matchdict['user'])
     # TODO @cyp to @Mika64 need to restrain view_config to POST ?
     if request.method == 'POST':
@@ -110,21 +151,27 @@ def admin_user(request):
 
 @view_config(route_name='about', renderer='templates/about.pt')
 def about(request):
+    """
+    """
     return {'project': 'wsgiwars'}
 
 
 @view_config(route_name='signup', renderer='templates/signup.pt')
 def signup(request):
+    """
+    """
     return {}
-
 
 @view_config(route_name='login', renderer='templates/login.pt')
 def login(request):
+    """
+    """
     return {}
-
 
 @view_config(route_name='submitLogin')
 def submitLogin(request):
+    """
+    """
     flashError = "Sorry dude : wrong login or password"
 
     if not request.POST['password'].strip():
@@ -153,11 +200,11 @@ def submitLogin(request):
 
     return HTTPFound(location=request.route_path('home'), headers=headers)
 
-
 @view_config(route_name='submitSignup',
              renderer='templates/signupSubmit.pt')
 def submitSignup(request):
-
+    """
+    """
     try:
         User.get(request.POST['login'])
     except couchdbkit.exceptions.ResourceNotFound:
@@ -183,10 +230,12 @@ def submitSignup(request):
         user.save()
 
         if hasattr(request.POST['avatar'], 'filename'):
-            tmph, originImage = tempfile.mkstemp(dir=settings['tmp'], suffix="original")
+            tmph, originImage = tempfile.mkstemp(dir=settings['tmp'], \
+                                                 suffix="original")
             os.close(tmph)
 
-            tmph, thumbImage = tempfile.mkstemp(dir=settings['tmp'], suffix="thumb")
+            tmph, thumbImage = tempfile.mkstemp(dir=settings['tmp'], \
+                                                suffix="thumb")
             os.close(tmph)
 
             with open(originImage, 'wb') as tmp:
@@ -213,17 +262,21 @@ def submitSignup(request):
         return {'name': request.POST['name']}
 
     else:
-
         return HTTPFound(location=request.route_path('signup'))
 
 
-@view_config(route_name='addLink', renderer='templates/addlink.pt', logged=True)
+@view_config(route_name='addLink', renderer='templates/addlink.pt', \
+             logged=True)
 def addlink(request):
+    """
+    """
     return {'link': None}
 
-
-@view_config(route_name='copyLink', renderer='templates/addlink.pt', logged=True)
+@view_config(route_name='copyLink', renderer='templates/addlink.pt', \
+             logged=True)
 def copylink(request):
+    """
+    """
     link = Link.get(request.matchdict['link'])
 
     if link.private:
@@ -231,10 +284,10 @@ def copylink(request):
 
     return {'link': link}
 
-
 @view_config(route_name='submitLink', logged=True)
 def submitlink(request):
-
+    """
+    """
     # TODO check if not already submit by user
 
     tags = [tag.strip() for tag in request.POST['tags'].split(',')]
@@ -276,8 +329,11 @@ def user(request):
     return {'links': links, 'user': user, 'limit': limit, 'page': page}
 
 
-@view_config(route_name="mylinks", renderer="templates/mylinks.pt", logged=True)
+@view_config(route_name="mylinks", renderer="templates/mylinks.pt", \
+             logged=True)
 def mylinks(request):
+    """
+    """
     limit, page = limitAndPage(request)
 
     links = Link.view('my_link/all', limit=limit,
@@ -290,6 +346,8 @@ def mylinks(request):
 
 @view_config(route_name="tag", renderer="templates/tag.pt")
 def tag(request):
+    """
+    """
     limit, page = limitAndPage(request)
 
     links = Link.view('viewTag/all', limit=limit,
@@ -301,23 +359,26 @@ def tag(request):
 
 @view_config(route_name='logout', logged=True)
 def logout(request):
+    """
+    """
     request.session.delete()
     return HTTPFound(location=request.route_path('home'))
 
-
 @view_config(route_name='rss', renderer='templates/rss.pt')
 def rss(request):
+    """
+    """
     links = Link.view('public/all',  limit=10, descending=True)
     return {'links': links}
 
-
 @view_config(route_name="tagrss", renderer="templates/tagrss.pt")
 def tagrss(request):
+    """
+    """
     links = Link.view('viewTag/all', limit=10, descending=True,
                       startkey=[request.matchdict['tag'], {}],
                       endkey=[request.matchdict['tag']])
     return {'links': links}
-
 
 @view_config(route_name="userrss", renderer="templates/userrss.pt")
 def userrss(request):
@@ -333,9 +394,10 @@ def userrss(request):
 
     return {'links': links, 'user': user}
 
-
 @view_config(route_name='link', renderer='templates/link.pt')
 def link(request):
+    """
+    """
     link = Link.get(request.matchdict['link'])
 
     if link.private:
@@ -343,9 +405,11 @@ def link(request):
 
     return {'link': link}
 
-
-@view_config(route_name='contacts', renderer='templates/contacts.pt', logged=True)
+@view_config(route_name='contacts', renderer='templates/contacts.pt', \
+             logged=True)
 def contacts(request):
+    """
+    """
     limit, page = limitAndPage(request)
 
     users = User.view('viewFollowers/all', limit=limit,
@@ -354,9 +418,11 @@ def contacts(request):
 
     return {"users": users, 'limit': limit, 'page': page}
 
-
-@view_config(route_name='submitContact', renderer='templates/submit_contact.pt', logged=True)
+@view_config(route_name='submitContact', \
+             renderer='templates/submit_contact.pt', logged=True)
 def submitContact(request):
+    """
+    """
     if not(request.POST['contactid'].strip()):
         request.session.flash("contact id is required")
         HTTPFound(location=request.route_path('contacts'))
@@ -378,8 +444,11 @@ def submitContact(request):
     return HTTPFound(location=request.route_path('contacts'))
 
 
-@view_config(route_name="unfollow", renderer='templates/unfollow.pt', logged=True)
+@view_config(route_name="unfollow", renderer='templates/unfollow.pt', \
+             logged=True)
 def unfollow(request):
+    """
+    """
     try:
         user = User.get(request.matchdict['userid'].strip())
     except couchdbkit.exceptions.ResourceNotFound:
@@ -391,6 +460,8 @@ def unfollow(request):
 
 @view_config(route_name="confirmUnfollow", logged=True)
 def confirmUnfollow(request):
+    """
+    """
     try:
         user = User.get(request.matchdict['userid'].strip())
     except couchdbkit.exceptions.ResourceNotFound:
@@ -405,8 +476,11 @@ def confirmUnfollow(request):
     request.session.flash("You don't follower %s anymore" % user.name)
     return HTTPFound(location=request.route_path('contacts'))
 
-@view_config(route_name="profile", renderer='templates/profile.pt', logged=True)
+@view_config(route_name="profile", renderer='templates/profile.pt', \
+             logged=True)
 def profile(request):
+    """
+    """
     user = User.get(request.session['login'])
 
     if request.method =='POST':
@@ -416,6 +490,7 @@ def profile(request):
         if not request.POST['initPassword'].strip():
             request.session.flash('No password provided')
             return {'user':user}
+
 
         elif not bcrypt.hashpw(request.POST['initPassword'].encode('utf-8'), user.password) == user.password:
             request.session.flash(flashError)
@@ -450,6 +525,8 @@ def profile(request):
 
 @view_config(route_name='avatar')
 def avatar(request):
+    """
+    """
     try:
         user = User.get(request.matchdict['userid'].strip())
     except couchdbkit.exceptions.ResourceNotFound:
@@ -461,8 +538,11 @@ def avatar(request):
     return response
 
 
-@view_config(route_name='comment', renderer='templates/addComment.pt', logged = True)
+@view_config(route_name='comment', renderer='templates/addComment.pt', \
+             logged = True)
 def comment(request):
+    """
+    """
     link = Link.get(request.matchdict['link'])
     if request.method == 'POST':
         comment={
@@ -477,12 +557,16 @@ def comment(request):
 
 @view_config(route_name= 'rmLink', logged=True)
 def rmlink(request):
+    """
+    """
     link = Link.get(request.matchdict['link'])
     link.delete()
     return HTTPFound(location=request.route_path('mylinks'))
 
 @view_config(route_name= 'rmComment', logged=True)
 def rmlink(request):
+    """
+    """
     link = Link.get(request.matchdict['link'])
     comment = [comment for comment in link.comments if \
             comment['author'] == request.session['login'] and\
