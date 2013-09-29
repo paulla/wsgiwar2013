@@ -255,7 +255,7 @@ def submitChangePassword(request):
     if not request.POST['confirmPassword'].strip():
         request.session.flash(u"Please confirm your new password")
         return HTTPFound(location=request.route_path('changePassword'))
-    
+
     if not user.password == bcrypt.hashpw(request.POST['initPassword'].encode('utf-8'), user.password):
         request.session.flash(u"Actual password does not match with register password")
         return HTTPFound(location=request.route_path('changePassword'))
@@ -339,3 +339,35 @@ def link(request):
         raise HTTPNotFound()
 
     return {'link': link}
+
+
+@view_config(route_name='contacts', renderer='templates/contacts.pt', logged=True)
+def contacts(request):
+    users = User.view('viewFollowers/all', limit=10,
+                      descending=True,
+                      key=request.session['login'])
+
+    return {"users" :users}
+
+
+@view_config(route_name='submitContact', renderer='templates/submit_contact.pt', logged=True)
+def submitContact(request):
+    if not(request.POST['contactid'].strip()):
+        request.session.flash("contact id is required")
+        HTTPFound(location=request.route_path('contacts'))
+
+    try:
+        user = User.get(request.POST['contactid'].strip())
+    except couchdbkit.exceptions.ResourceNotFound:
+        request.session.flash("Sorry, we don't find your buddy.")
+        return HTTPFound(location=request.route_path('contacts'))
+
+    if request.session['login'] in user.followers:
+        request.session.flash("You already follow %s." % user.name)
+        return HTTPFound(location=request.route_path('contacts'))
+
+    user.followers.append(request.session['login'])
+    user.save()
+
+    request.session.flash("You follow %s." % user.name)
+    return HTTPFound(location=request.route_path('contacts'))
