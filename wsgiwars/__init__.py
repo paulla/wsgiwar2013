@@ -51,6 +51,10 @@ def main(global_config, **settings):
     config.add_route('userrss', '/user/{userid}/rss')
     config.add_route('tagrss', '/tag/{tag}/rss')
 
+    config.add_route('contacts', '/contacts')
+    config.add_route('submitContact', '/submitContact')
+    config.add_route('unfollow', '/unfollow/{userid}')
+
     config.add_view_predicate('logged', LoggedPredicate)
 
     for include in ['pyramid_mailer',
