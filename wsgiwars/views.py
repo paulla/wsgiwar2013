@@ -26,11 +26,14 @@ db = server.get_or_create_db(settings['couchdb.db'])
 User.set_db(db)
 Link.set_db(db)
 
-push('couchdb/_design/user', db)
-push('couchdb/_design/public', db)
-push('couchdb/_design/user_link', db)
-push('couchdb/_design/my_link', db)
-push('couchdb/_design/viewTag', db)
+for view in ['couchdb/_design/user',
+             'couchdb/_design/public',
+             'couchdb/_design/user_link',
+             'couchdb/_design/my_link',
+             'couchdb/_design/viewTag',
+             'couchdb/_design/viewFollowers',]:
+    push(view, db)
+
 
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
