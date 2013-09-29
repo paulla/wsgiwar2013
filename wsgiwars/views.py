@@ -97,6 +97,7 @@ def admin_list(request):
 @view_config(route_name='admin_user', renderer='templates/admin_user.pt', logged=True, is_admin=True)
 def admin_user(request):
     user = User.get(request.matchdict['user'])
+    # TODO @cyp to @Mika64 need to restrain view_config to POST ?
     if request.method == 'POST':
         user.name = request.POST.get('name')
         user.description = request.POST.get('description')
@@ -266,8 +267,11 @@ def user(request):
     except couchdbkit.exceptions.ResourceNotFound:
         return HTTPNotFound()
 
-    links = Link.view('user_link/all',  limit=10,
-                      descending=True, key=user._id)
+    limit, page = limitAndPage(request)
+
+    links = Link.view('user_link/all',  limit=limit,
+                      skip=limit*page, descending=True,
+                      key=user._id)
 
     return {'links': links, 'user': user}
 
@@ -406,7 +410,7 @@ def profile(request):
         elif not bcrypt.hashpw(request.POST['initPassword'].encode('utf-8'), \
                                     user.password) == user.password:
             request.session.flash(flashError)
-            return {'user':user}        
+            return {'user':user}
 
         if request.POST['newPassword'].strip():
             if request.POST['newPassword'] == request.POST['confirmPassword']:
