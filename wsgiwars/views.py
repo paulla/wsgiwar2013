@@ -40,8 +40,8 @@ for view in ['couchdb/_design/user',
 
 avatarSize = 128,128
 
-@view_config(route_name='home', renderer='templates/home.pt')
-def home(request):
+def limitAndPage(request):
+    # TODO validators ?
     limit = 10
     page = 0
 
@@ -59,8 +59,15 @@ def home(request):
         except ValueError:
             pass
 
+    return limit, page
+@view_config(route_name='home', renderer='templates/home.pt')
+def home(request):
+
+    limit, page = limitAndPage(request)
+
     links = Link.view('public/all',  limit=limit, descending=True, skip=limit*page)
 
+    # TODO : next and previous
     return {'links': links}
 
 
