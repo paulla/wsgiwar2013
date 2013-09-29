@@ -7,4 +7,13 @@
   <div metal:fill-slot="rss" class="span9">
     <a href="${request.route_path('userrss', userid=request.matchdict['userid'])}"><i class="icon-rss"></i> RSS</a>
   </div>
+
+  <div metal:fill-slot="pagination" class="span9">
+    <a class="span3" tal:condition="page" href="${request.route_path('user', userid=request.matchdict['userid'], _query={'limit':limit, 'page':page-1})}">
+    <i class="icon-arrow-left"></i>Previous</a>
+    <a class="span3" href="${request.route_path('user', userid=request.matchdict['userid'], _query={'limit':limit, 'page':page+1})}">
+      Next
+    <i class="icon-arrow-right"></i></a>
+  </div>
+
 </metal:main>

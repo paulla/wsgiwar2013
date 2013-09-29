@@ -273,7 +273,7 @@ def user(request):
                       startkey=[user._id, {}], endkey=[user._id],
                       include_docs=True)
 
-    return {'links': links, 'user': user}
+    return {'links': links, 'user': user, 'limit':limit, 'page': page}
 
 
 @view_config(route_name="mylinks", renderer="templates/mylinks.pt", logged=True)
