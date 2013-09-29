@@ -23,6 +23,7 @@ def main(global_config, **settings):
 
     config.add_route('home', '/')
     config.add_route('about', '/about')
+
     config.add_route('admin', '/admin')
     config.add_route('admin_list', '/admin/users/{page}')
     config.add_route('admin_user', '/admin/detail/{user}')
@@ -43,6 +44,9 @@ def main(global_config, **settings):
 
     config.add_route("mylinks", '/mylinks')
     config.add_route('user', '/user/{userid}')
+
+    config.add_route('avatar', '/avatar/{userid}')
+
     config.add_route('changePassword', '/changePassword')
     config.add_route('submitChangePassword', '/changePassword/submit')
 

@@ -7,6 +7,7 @@ from pyramid.threadlocal import get_current_registry
 from pyramid.httpexceptions import HTTPFound
 from pyramid.httpexceptions import HTTPNotFound
 from pyramid.security import remember
+from pyramid.response import Response
 
 from pyramid_mailer.mailer import Mailer
 from pyramid_mailer.message import Message
@@ -408,3 +409,16 @@ def confirmUnfollow(request):
 
     request.session.flash("You don't follower %s anymore" % user.name)
     return HTTPFound(location=request.route_path('contacts'))
+
+
+@view_config(route_name='avatar')
+def avatar(request):
+    try:
+        user = User.get(request.matchdict['userid'].strip())
+    except couchdbkit.exceptions.ResourceNotFound:
+        raise HTTPNotFound()
+
+    response = Response(content_type='image/jpeg',
+                        body=user.fetch_attachment('avatar'))
+
+    return response
