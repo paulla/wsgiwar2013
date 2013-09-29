@@ -8,3 +8,4 @@ class User(couchdbkit.Document):
     description = couchdbkit.StringProperty()
     is_admin = couchdbkit.BooleanProperty()
     followers = couchdbkit.StringListProperty()
+    mail = couchdbkit.StringProperty()

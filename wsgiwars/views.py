@@ -177,6 +177,7 @@ def submitSignup(request):
         user = User(password=password,
                     name=request.POST['name'],
                     description=request.POST['description'],
+                    mail=request.POST['email'],
                     )
         user._id = request.POST['login']
         user.save()
@@ -254,52 +255,6 @@ def submitlink(request):
 
     request.session.flash("link added !")
     return HTTPFound(location=request.route_path('home'))
-
-
-@view_config(route_name="changePassword",
-             renderer="templates/changePassword.pt")
-def changePassword(request):
-    return {}
-
-
-@view_config(route_name="submitChangePassword",
-             renderer="templates/submitChangePassword.pt")
-def submitChangePassword(request):
-    """
-    Change user password.
-    """
-
-    try:
-        user = User.get(request.session['login'])
-    except couchdbkit.exceptions.ResourceNotFound:
-        request.session.flash(u"Please login first")
-        return HTTPFound(location=request.route_path('login'))
-
-    if not request.POST['initPassword'].strip():
-        request.session.flash(u"Please provide your actual password")
-        return HTTPFound(location=request.route_path('changePassword'))
-    if not request.POST['newPassword'].strip():
-        request.session.flash(u"Please provide your new password")
-        return HTTPFound(location=request.route_path('changePassword'))
-    if not request.POST['confirmPassword'].strip():
-        request.session.flash(u"Please confirm your new password")
-        return HTTPFound(location=request.route_path('changePassword'))
-
-    if not user.password == bcrypt.hashpw(request.POST['initPassword'].encode('utf-8'), user.password):
-        request.session.flash(
-            u"Actual password does not match with register password")
-        return HTTPFound(location=request.route_path('changePassword'))
-
-    if request.POST['newPassword'] == request.POST['confirmPassword']:
-        password = bcrypt.hashpw(
-            request.POST['newPassword'].encode('utf-8'), bcrypt.gensalt())
-        user.password = password
-        user.save()
-        request.session.flash(u"Change done!")
-        return {'user': user}
-    else:
-        request.session.flash(u"Password does not match")
-        return HTTPFound(location=request.route_path('changePassword'))
 
 
 @view_config(route_name="user", renderer="templates/user.pt")
@@ -436,6 +391,38 @@ def confirmUnfollow(request):
     request.session.flash("You don't follower %s anymore" % user.name)
     return HTTPFound(location=request.route_path('contacts'))
 
+@view_config(route_name="profile", renderer='templates/profile.pt', logged=True)
+def profile(request):
+    user = User.get(request.session['login'])
+
+    if request.method =='POST':
+
+        flashError = "Sorry dude : wrong password"
+
+        if not request.POST['initPassword'].strip():
+            request.session.flash(flashError)
+            return {'user':user}
+
+        elif not bcrypt.hashpw(request.POST['initPassword'].encode('utf-8'), \
+                                    user.password) == user.password:
+            request.session.flash(flashError)
+            return {'user':user}        
+
+        if request.POST['newPassword'].strip():
+            if request.POST['newPassword'] == request.POST['confirmPassword']:
+                password = bcrypt.hashpw(request.POST['newPassword'].encode('utf-8'), bcrypt.gensalt())
+                user.password = password
+            else:
+                request.session.flash(u"Password not confirm")
+                return {'user' : user}
+
+        user.name = request.POST['name']
+        user.description = request.POST['description']
+        user.mail = request.POST['email']
+        user.save()
+        request.session.flash(u"Modification saved !")
+
+    return {'user':user}
 
 @view_config(route_name='avatar')
 def avatar(request):
