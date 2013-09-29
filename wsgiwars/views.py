@@ -261,7 +261,7 @@ def submitSignup(request):
                           recipients=[request.POST['email']],
                           body="Confirm the link")  # TODO add link
 
-        mailer.send(message)
+        mailer.send_immediately(message, fail_silently=False)
 
         return {'name': request.POST['name']}
 
