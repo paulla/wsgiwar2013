@@ -1,0 +1,43 @@
+<metal:main use-macro="load: layout.pt" >
+  <div class="span9" metal:fill-slot="content">
+    <h1 i18n:translate=''>Comment a link !</h1>
+  <div class="link span8" >
+    <div class="row">
+      <a class="span6" href="${link.url}">${link.url}</a>
+      <span class='span2'>
+    <i class="icon-minus"></i>
+    <a href="${request.route_path('user', userid=link.userID)}">
+      ${link.username}
+    </a>
+      </span>
+    </div>
+    <div class="row">
+      <a tal:repeat="tag link.tags" href="${request.route_path('tag', tag=tag)}">${tag}</a>
+    </div>
+    <div class="row">
+      <p class="span7"><pre>${link.comment.strip()}</pre></p>
+    </div>
+    <div class="row" tal:repeat="comment link.comments">
+        <p><a href="${request.route_path('user', userid=comment.author)}" >${comment.author}</a> - ${str(comment.date)}</p>
+      <p class="span7"><pre>${comment.comment.strip()}</pre></p>
+    </div>
+  </div>
+  <tal:if condition='"login" in request.session'>
+    <a class="span1" tal:condition="request.session['login'] != link.userID" href="${request.route_path('copyLink', link=link._id)}">
+      <i class="icon-plus"></i>
+    </a>
+    </tal:if>
+    <div class="row">
+    <form action="${request.route_path('comment', link=link._id)}" method="POST">
+      <div class="row">
+	<label class="span2" for="comment" i18n:translate=''>Comment :</label>
+	<textarea row="5" class="span7" name="comment" id="comment" placeholder='Comment this link' ></textarea>
+      </div>
+
+     <div class="row">
+      <input class="span3 btn btn-success" type="submit" name="submmit" id="submit" i18n:translate='' value='Add Comment!'></input>
+    </div>
+    </form>
+    </div>
+  </div>
+</metal:main>
