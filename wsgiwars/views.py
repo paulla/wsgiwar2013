@@ -67,8 +67,7 @@ def home(request):
 
     links = Link.view('public/all',  limit=limit, descending=True, skip=limit*page)
 
-    # TODO : next and previous
-    return {'links': links}
+    return {'links': links, 'page': page, 'limit':limit}
 
 
 @view_config(route_name='delete_user', logged=True, is_admin=True)

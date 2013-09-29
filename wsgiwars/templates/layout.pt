@@ -15,7 +15,7 @@
 	<div class="navbar-inner">
 	  <div class="container" >
       <span class="username"  tal:condition="'username' in request.session">
-        <a class="logout" href="/profile" tal:condition="'username' in request.session" i18n:translate=''>      
+        <a class="logout" href="/profile" tal:condition="'username' in request.session" i18n:translate=''>
 	      ${request.session['username']}
         </a>
       </span>
@@ -69,6 +69,7 @@
       <div id="content" metal:define-slot="content"></div>
 
     </div>
+    <div id="pagination" metal:define-slot="pagination"></div>
     <div id="rss" metal:define-slot="rss"></div>
     </article>
 
