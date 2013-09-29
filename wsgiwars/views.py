@@ -248,7 +248,6 @@ def user(request):
 
 @view_config(route_name="mylinks", renderer="templates/mylinks.pt", logged=True)
 def mylinks(request):
-    # TODO check if log
     links = Link.view('my_link/all', limit=10, descending=True,
                       key=request.session['login'])
 
@@ -409,3 +408,18 @@ def avatar(request):
                         body=user.fetch_attachment('avatar'))
 
     return response
+
+
+@view_config(route_name='comment', renderer='templates/addComment.pt')
+def comment(request):
+    link = Link.get(request.matchdict['link'])
+    if request.method == 'POST':
+        comment={
+                'author' : request.session['login'],
+                'date' : datetime.datetime.now(),
+                'comment' : request.POST['comment']
+                }
+        link.comments.append(comment)
+        link.save()
+        request.session.flash(u"Comment Added!")
+    return{'link': link}
