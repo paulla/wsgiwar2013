@@ -381,3 +381,20 @@ def unfollow(request):
         return HTTPFound(location=request.route_path('contacts'))
 
     return {"user": user}
+
+
+@view_config(route_name="confirmUnfollow", logged=True)
+def confirmUnfollow(request):
+    try:
+        user = User.get(request.matchdict['userid'].strip())
+    except couchdbkit.exceptions.ResourceNotFound:
+        request.session.flash("Sorry, we don't find your buddy.")
+        return HTTPFound(location=request.route_path('contacts'))
+
+    user.followers = [follower for follower in user.followers
+                      if follower != request.session['login']]
+
+    user.save()
+
+    request.session.flash("You don't follower %s anymore" % user.name )
+    return HTTPFound(location=request.route_path('contacts'))
