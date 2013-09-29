@@ -1,7 +1,11 @@
 <article>
   <div class="user span8" >
     <div class="row span7">
-      <a href="${request.route_path('user', userid=user._id)}">${user.name}</a>
+      <tal:if condition='user._attachments'>
+	<img class="span1" tal:condition="'avatar' in user._attachments" src="${request.route_path('avatar', userid=user._id)}" alt="${user.name}'s avatar"/>
+      </tal:if>
+      <a href="${request.route_path('user', userid=user._id)}">
+	${user.name}</a>
     </div>
     <div class='row span7'>
       <p>
