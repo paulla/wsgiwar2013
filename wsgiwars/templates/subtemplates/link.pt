@@ -24,4 +24,9 @@
       <i class="icon-plus"></i>
     </a>
   </tal:if>
+  <tal:if condition='"login" in request.session'>
+    <a class="span1" tal:condition="request.session['login'] == link.userID" href="${request.route_path('rmLink', link=link._id)}">
+      <i class="icon-remove"></i>
+    </a>
+  </tal:if>
 </article>

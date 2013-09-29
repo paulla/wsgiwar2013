@@ -18,9 +18,16 @@
       <p class="span7"><pre>${link.comment.strip()}</pre></p>
     </div>
     <div class="row" tal:repeat="comment link.comments">
-        <p><a href="${request.route_path('user', userid=comment.author)}" >${comment.author}</a> - ${str(comment.date)}</p>
+        <p><a href="${request.route_path('user', userid=comment.author)}" >${comment.author}</a> - ${str(comment.date)}
+  <tal:if condition='"login" in request.session'>
+  <a class="span1" tal:condition="request.session['login'] == comment.author" 
+      href="${request.route_path('rmComment', link=link._id, userid=comment.author, date=str(comment.date))}">
+      <i class="icon-remove"></i>
+  </a>
+  </tal:if>
+  </p>
       <p class="span7"><pre>${comment.comment.strip()}</pre></p>
-    </div>
+  </div>
   </div>
   <tal:if condition='"login" in request.session'>
     <a class="span1" tal:condition="request.session['login'] != link.userID" href="${request.route_path('copyLink', link=link._id)}">
