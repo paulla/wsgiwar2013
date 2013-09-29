@@ -6,9 +6,9 @@
   </div>
 
   <div metal:fill-slot="pagination" class="span9">
-    <a class="span3" tal:condition="page" href="${request.route_path('mylink', _query={'limit':limit, 'page':page-1})}">
+    <a class="span3" tal:condition="page" href="${request.route_path('mylinks', _query={'limit':limit, 'page':page-1})}">
     <i class="icon-arrow-left"></i>Previous</a>
-    <a class="span3" href="${request.route_path('mylink', _query={'limit':limit, 'page':page+1})}">
+    <a class="span3" href="${request.route_path('mylinks', _query={'limit':limit, 'page':page+1})}">
       Next
     <i class="icon-arrow-right"></i></a>
   </div>
