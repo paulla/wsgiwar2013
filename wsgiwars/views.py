@@ -42,7 +42,24 @@ avatarSize = 128,128
 
 @view_config(route_name='home', renderer='templates/home.pt')
 def home(request):
-    links = Link.view('public/all',  limit=10, descending=True)
+    limit = 10
+    page = 0
+
+    if 'limit' in request.GET:
+        try:
+            limit = int(request.GET['limit'])
+        except ValueError:
+            pass
+
+    if 'page' in request.GET:
+        try:
+            page = int(request.GET['page'])
+            if page < 0:
+                page = 0
+        except ValueError:
+            pass
+
+    links = Link.view('public/all',  limit=limit, descending=True, skip=limit*page)
 
     return {'links': links}
 
