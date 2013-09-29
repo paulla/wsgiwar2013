@@ -85,10 +85,13 @@ def admin(request):
 
 @view_config(route_name='admin_list', renderer='templates/admin.pt', logged=True, is_admin=True)
 def admin_list(request):
-    skip = int(request.matchdict['page']) * 10
-    users = User.view('user/all', skip=skip, limit=10, descending=True)
+    limit, page = limitAndPage(request)
+
+    skip = limit*page
+    users = User.view('user/all', skip=skip, limit=limit, descending=True)
+
     return {'users': users,
-            'page': request.matchdict['page']}
+            'page': page}
 
 
 @view_config(route_name='admin_user', renderer='templates/admin_user.pt', logged=True, is_admin=True)
