@@ -51,6 +51,6 @@ setup(name='wsgiwars',
       main = wsgiwars:main
       [console_scripts]
       setAdmin = wsgiwars.utils:setAdmin
-
+      delAndPurge = wsgiwars.utils:delAndPurge
       """,
       )
