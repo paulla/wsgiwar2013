@@ -48,9 +48,6 @@ def main(global_config, **settings):
 
     config.add_route('avatar', '/avatar/{userid}')
 
-    config.add_route('changePassword', '/changePassword')
-    config.add_route('submitChangePassword', '/changePassword/submit')
-
     config.add_route('tag', '/tag/{tag}')
 
     config.add_route('rss', '/rss')
