@@ -14,9 +14,11 @@
       <div class="navbar">
 	<div class="navbar-inner">
 	  <div class="container" >
-	    <span class="username"  tal:condition="'username' in request.session">
+      <span class="username"  tal:condition="'username' in request.session">
+        <a class="logout" href="/profile" tal:condition="'username' in request.session" i18n:translate=''>      
 	      ${request.session['username']}
-	    </span>
+        </a>
+      </span>
 	    <a class="logout" href="/logout" tal:condition="'username' in request.session" i18n:translate=''>
 	      Logout
 	    </a>

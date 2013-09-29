@@ -43,6 +43,7 @@ def main(global_config, **settings):
 
     config.add_route("mylinks", '/mylinks')
     config.add_route('user', '/user/{userid}')
+    config.add_route('profile', '/profile')
     config.add_route('changePassword', '/changePassword')
     config.add_route('submitChangePassword', '/changePassword/submit')
 
