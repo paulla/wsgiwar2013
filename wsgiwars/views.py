@@ -415,13 +415,23 @@ def profile(request):
         flashError = "Sorry dude : wrong password"
 
         if not request.POST['initPassword'].strip():
+            request.session.flash('No password provided')
+            return {'user':user}
+
+        elif not bcrypt.hashpw(request.POST['initPassword'].encode('utf-8'), user.password) == user.password:
             request.session.flash(flashError)
             return {'user':user}
 
-        elif not bcrypt.hashpw(request.POST['initPassword'].encode('utf-8'), \
-                                    user.password) == user.password:
-            request.session.flash(flashError)
-            return {'user':user}
+        if request.POST['submitDelete']:
+            request.session.delete()
+            user.delete()
+            mailer = Mailer()
+            message = Message(subject="Account deleted", \
+                             sender=settings['mail_from'], \
+                             recipients=user.mail, \
+                             body="Your account have been deleted")
+            mailer.send(message)
+            return HTTPFound(location=request.route_path('home'))
 
         if request.POST['newPassword'].strip():
             if request.POST['newPassword'] == request.POST['confirmPassword']:
