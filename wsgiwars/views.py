@@ -3,11 +3,11 @@
 #
 # Copyright (c) 2013 PauLLA
 #
-# Permission is hereby granted, free of charge, to any person obtaining a 
+# Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation 
-# the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-# and/or sell copies of the Software, and to permit persons to whom the 
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
 #
 # The above copyright notice and this permission notice shall be included in
@@ -16,9 +16,9 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNES FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 ############################################################################
 
@@ -266,8 +266,8 @@ def submitSignup(request):
             os.remove(originImage)
             os.remove(thumbImage)
 
-        confirm_link = request.route_url('checkLogin', 
-                userid = user._id, 
+        confirm_link = request.route_url('checkLogin',
+                userid = user._id,
                 randomid = user.random)
 
         mailer = Mailer()
@@ -327,6 +327,10 @@ def submitlink(request):
         link.private = True
 
     link.save()
+
+    user = User.get(request.session['login'])
+    user.links.append(link._id)
+    user.save()
 
     request.session.flash("link added !")
     return HTTPFound(location=request.route_path('home'))
@@ -525,9 +529,9 @@ def profile(request):
 
         if request.POST['submitDelete']:
             mailer = Mailer()
-            message = Message(subject="Account deleted", 
-                             sender=settings['mail_from'], 
-                             recipients=[user.mail], 
+            message = Message(subject="Account deleted",
+                             sender=settings['mail_from'],
+                             recipients=[user.mail],
                              body="Your account have been deleted")
             mailer.send_immediately(message, fail_silently=False)
             user.delete()
