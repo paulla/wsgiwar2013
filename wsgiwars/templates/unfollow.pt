@@ -1,11 +1,11 @@
 <metal:main use-macro="load: layout.pt" >
-  <div class="span9" metal:fill-slot="content" tal:define="userT load: subtemplates/user.pt" >
+  <div class="col-md-9" metal:fill-slot="content" tal:define="userT load: subtemplates/user.pt" >
     <h1 i18n:translate=''>Unfollow ${user.name} ?</h1>
     <article metal:use-macro="userT">
     </article>
     <div class="row">
-      <a class="span3 btn btn-danger" href="${request.route_path('confirmUnfollow', userid=user._id)}" i18n:translate="">Yes</a>
-      <a class="span3 btn btn-success" href="${request.route_path('contacts')}" i18n:translate="">No</a>
+      <a class="col-md-3 btn btn-danger" href="${request.route_path('confirmUnfollow', userid=user._id)}" i18n:translate="">Yes</a>
+      <a class="col-md-3 btn btn-success" href="${request.route_path('contacts')}" i18n:translate="">No</a>
     </div>
   </div>
 </metal:main>

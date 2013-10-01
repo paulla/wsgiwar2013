@@ -1,18 +1,18 @@
 <article>
-  <div class="user span8" >
-    <div class="row span7">
+  <div class="user col-md-8" >
+    <div class="row col-md-7">
       <tal:if condition='user._attachments'>
-	<img class="span1" tal:condition="'avatar' in user._attachments" src="${request.route_path('avatar', userid=user._id)}" alt="${user.name}'s avatar"/>
+	<img class="col-md-1" tal:condition="'avatar' in user._attachments" src="${request.route_path('avatar', userid=user._id)}" alt="${user.name}'s avatar"/>
       </tal:if>
       <a href="${request.route_path('user', userid=user._id)}">
 	${user.name}</a>
     </div>
-    <div class='row span7'>
+    <div class='row col-md-7'>
       <p>
 	<pre>${user.description.strip()}</pre>
       </p>
     </div>
-    <div class="span1">
+    <div class="col-md-1">
       <a href="${request.route_path('unfollow', userid=user._id)}"><i class="icon-trash"></i></a>
     </div>
   </div>
