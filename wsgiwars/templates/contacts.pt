@@ -1,11 +1,11 @@
 <metal:main use-macro="load: layout.pt" >
-  <div class="span9" metal:fill-slot="content" tal:define="userT load: subtemplates/user.pt" >
+  <div class="col-md-9" metal:fill-slot="content" tal:define="userT load: subtemplates/user.pt" >
     <h1 i18n:translate=''>Your contacts</h1>
     <form action="${request.route_path('submitContact')}" method="POST">
       <div class="row">
-	<label for="contact" class="span2" i18n:translate="">Contact ID :</label>
-	<input class="span3" type="text" placeholder="Your contact id here." name="contactid" id="contactid"/>
-	<input class="span2 btn btn-success" type="submit" value="Add !"/>
+	<label for="contact" class="col-md-2" i18n:translate="">Contact ID :</label>
+	<input class="col-md-3" type="text" placeholder="Your contact id here." name="contactid" id="contactid"/>
+	<input class="col-md-2 btn btn-success" type="submit" value="Add !"/>
       </div>
 
     </form>
@@ -14,10 +14,10 @@
 
   </div>
 
-    <div metal:fill-slot="pagination" class="span9">
-      <a class="span3" tal:condition="page" href="${request.route_path('contacts', _query={'limit':limit, 'page':page-1})}">
+    <div metal:fill-slot="pagination" class="col-md-9">
+      <a class="col-md-3" tal:condition="page" href="${request.route_path('contacts', _query={'limit':limit, 'page':page-1})}">
       <i class="icon-arrow-left"></i>Previous</a>
-      <a class="span3" href="${request.route_path('contacts', _query={'limit':limit, 'page':page+1})}">
+      <a class="col-md-3" href="${request.route_path('contacts', _query={'limit':limit, 'page':page+1})}">
 	Next
       <i class="icon-arrow-right"></i></a>
     </div>

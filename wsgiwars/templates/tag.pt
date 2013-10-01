@@ -1,17 +1,17 @@
 <metal:main use-macro="load: layout.pt" >
-  <div class="span9" metal:fill-slot="content" tal:define="linkT load: subtemplates/link.pt" >
+  <div class="col-md-9" metal:fill-slot="content" tal:define="linkT load: subtemplates/link.pt" >
     <h1 i18n:translate=''>Links for tag ${request.matchdict['tag']}</h1>
     <article tal:repeat="link links" metal:use-macro="linkT">
     </article>
   </div>
-  <div metal:fill-slot="rss" class="span9">
+  <div metal:fill-slot="rss" class="col-md-9">
     <a href="${request.route_path('tagrss', tag=request.matchdict['tag'])}"><i class="icon-rss"></i> RSS</a>
   </div>
 
-  <div metal:fill-slot="pagination" class="span9">
-    <a class="span3" tal:condition="page" href="${request.route_path('tag', tag=request.matchdict['tag'], _query={'limit':limit, 'page':page-1})}">
+  <div metal:fill-slot="pagination" class="col-md-9">
+    <a class="col-md-3" tal:condition="page" href="${request.route_path('tag', tag=request.matchdict['tag'], _query={'limit':limit, 'page':page-1})}">
     <i class="icon-arrow-left"></i>Previous</a>
-    <a class="span3" href="${request.route_path('tag', tag=request.matchdict['tag'], _query={'limit':limit, 'page':page+1})}">
+    <a class="col-md-3" href="${request.route_path('tag', tag=request.matchdict['tag'], _query={'limit':limit, 'page':page+1})}">
       Next
     <i class="icon-arrow-right"></i></a>
   </div>

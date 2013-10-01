@@ -1,8 +1,8 @@
 <article>
-  <div class="link span8" >
+  <div class="link col-md-8" >
     <div class="row">
-      <a class="span6" href="${link.url}">${link.url}</a>
-      <span class='span2'>
+      <a class="col-md-6" href="${link.url}">${link.url}</a>
+      <span class='col-md-2'>
 	<i class="icon-minus"></i>
 	<a href="${request.route_path('user', userid=link.userID)}">
 	  ${link.username}
@@ -13,19 +13,19 @@
       <a tal:repeat="tag link.tags" href="${request.route_path('tag', tag=tag)}">${tag}</a>
     </div>
     <div class="row">
-      <p class="span7"><pre>${link.comment.strip()}</pre></p>
+      <p class="col-md-7"><pre>${link.comment.strip()}</pre></p>
     </div>
     <div class="row">
-        <a class="span6" href="${request.route_path('comment', link=link._id)}">Comments</a>
+        <a class="col-md-6" href="${request.route_path('comment', link=link._id)}">Comments</a>
     </div>    
   </div>
   <tal:if condition='"login" in request.session'>
-    <a class="span1" tal:condition="request.session['login'] != link.userID" href="${request.route_path('copyLink', link=link._id)}">
+    <a class="col-md-1" tal:condition="request.session['login'] != link.userID" href="${request.route_path('copyLink', link=link._id)}">
       <i class="icon-plus"></i>
     </a>
   </tal:if>
   <tal:if condition='"login" in request.session'>
-    <a class="span1" tal:condition="request.session['login'] == link.userID" href="${request.route_path('rmLink', link=link._id)}">
+    <a class="col-md-1" tal:condition="request.session['login'] == link.userID" href="${request.route_path('rmLink', link=link._id)}">
       <i class="icon-remove"></i>
     </a>
   </tal:if>

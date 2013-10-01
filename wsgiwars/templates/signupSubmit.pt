@@ -1,14 +1,14 @@
 <metal:main use-macro="load: layout.pt" >
-  <div class="span9" metal:fill-slot="content">
+  <div class="col-md-9" metal:fill-slot="content">
     <h1 i18n:translate=''>Almost done !</h1>
 
     <div class="row">
-      <p class="span6">
+      <p class="col-md-6">
 	Welcome, ${name}
       </p>
       </div >
       <div class="row">
-      <p class="span6">
+      <p class="col-md-6">
 	Please, wait for our email. Meanwhile look some <a href="${request.route_path('home')}"> links posted by other users.</a>
       </p>
     </div>
