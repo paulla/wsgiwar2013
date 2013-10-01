@@ -590,6 +590,13 @@ def rmlink(request):
     """
     link = Link.get(request.matchdict['link'])
     link.delete()
+
+
+    user = User.get(request.session['login'])
+    user.links = [current for current in user.links
+                  if current != request.matchdict['link']]
+    user.save()
+
     return HTTPFound(location=request.route_path('mylinks'))
 
 @view_config(route_name= 'rmComment', logged=True)
