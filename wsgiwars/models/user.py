@@ -39,4 +39,4 @@ class User(couchdbkit.Document):
     mail = couchdbkit.StringProperty()
     random = couchdbkit.IntegerProperty()
     checked = couchdbkit.BooleanProperty()
-    links = couchdbkit.StringListProperty()
+    links = couchdbkit.DictProperty()
