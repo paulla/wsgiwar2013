@@ -63,7 +63,9 @@ for view in ['couchdb/_design/user',
              'couchdb/_design/user_link',
              'couchdb/_design/my_link',
              'couchdb/_design/viewTag',
-             'couchdb/_design/viewFollowers', ]:
+             'couchdb/_design/viewFollowers',
+             'couchdb/_design/contacts_links',
+             ]:
     push(view, db)
 
 avatarSize = 128,128
@@ -329,7 +331,7 @@ def submitlink(request):
     link.save()
 
     user = User.get(request.session['login'])
-    user.links.append(link._id)
+    user.links[link._id] = link.created
     user.save()
 
     request.session.flash("link added !")
@@ -593,8 +595,7 @@ def rmlink(request):
 
 
     user = User.get(request.session['login'])
-    user.links = [current for current in user.links
-                  if current != request.matchdict['link']]
+    del(user.links[request.matchdict['link']])
     user.save()
 
     return HTTPFound(location=request.route_path('mylinks'))
@@ -662,3 +663,18 @@ def submitcheckLogin(request):
     request.session.save()
 
     return HTTPFound(location=request.route_path('home'), headers=headers)
+
+@view_config(route_name="contactsLinks", renderer="templates/contactsLinks.pt", \
+             logged=True)
+def contactsLinks(request):
+    """
+    My contacts links.
+    """
+    limit, page = limitAndPage(request)
+
+    links = Link.view('contacts_links/all', limit=limit,
+                      descending=True, skip=page*limit,
+                      startkey=[request.session['login'], {}],
+                      endkey=[request.session['login']], include_docs=True)
+
+    return {'links': links, 'limit': limit, 'page': page}
