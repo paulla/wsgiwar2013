@@ -330,9 +330,10 @@ def submitlink(request):
 
     link.save()
 
-    user = User.get(request.session['login'])
-    user.links[link._id] = link.created
-    user.save()
+    if not link.private:
+        user = User.get(request.session['login'])
+        user.links[link._id] = link.created
+        user.save()
 
     request.session.flash("link added !")
     return HTTPFound(location=request.route_path('home'))
@@ -591,12 +592,13 @@ def rmlink(request):
     Delete a link.
     """
     link = Link.get(request.matchdict['link'])
+
+    if not link.private:
+        user = User.get(request.session['login'])
+        del(user.links[request.matchdict['link']])
+        user.save()
+
     link.delete()
-
-
-    user = User.get(request.session['login'])
-    del(user.links[request.matchdict['link']])
-    user.save()
 
     return HTTPFound(location=request.route_path('mylinks'))
 
