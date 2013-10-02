@@ -52,5 +52,6 @@ setup(name='wsgiwars',
       [console_scripts]
       setAdmin = wsgiwars.utils:setAdmin
       delAndPurge = wsgiwars.utils:delAndPurge
+      coherence = wsgiwars.utils:coherence
       """,
       )
