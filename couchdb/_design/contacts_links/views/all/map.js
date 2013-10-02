@@ -1,15 +1,12 @@
 function(doc) {
     if (doc.doc_type == "User")
     {
-	doc.follower.forEach(function(follower)
-			     {
-				 doc.links.forEach(function(link)
-						   {
-						       emit([follower, doc.links[link]], {"_id": link});
-						   }
-						  );
-			     });
-
+	for(var follower in doc.followers)
+	{
+		for(var link in doc.links)
+		{
+			emit([doc.followers[follower], doc.links[link]], {"_id": link});
+		}
+	}
     }
-
 }

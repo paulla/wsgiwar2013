@@ -664,7 +664,7 @@ def submitcheckLogin(request):
 
     return HTTPFound(location=request.route_path('home'), headers=headers)
 
-@view_config(route_name="contactsLinks", renderer="templates/contactsLinks.pt", \
+@view_config(route_name="contactsLinks", renderer="templates/contactslinks.pt", \
              logged=True)
 def contactsLinks(request):
     """
