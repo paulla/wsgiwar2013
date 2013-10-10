@@ -681,3 +681,20 @@ def contactsLinks(request):
                       endkey=[request.session['login']], include_docs=True)
 
     return {'links': links, 'limit': limit, 'page': page}
+
+
+@view_config(route_name="cloudTags", renderer="templates/cloudTags.pt")
+def cloudTags(request):
+    """
+    Cloud Tags.
+    """
+
+    tmp = Link.view('tags/all',
+                    group=True,
+                    group_level=1
+        )
+
+
+    tags = {tag['key']: tag['value'] for tag in tmp}
+
+    return {'tags' :tags}

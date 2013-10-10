@@ -92,6 +92,8 @@ def main(global_config, **settings):
     config.add_route('confirmUnfollow', '/confirmUnfollow/{userid}')
     config.add_route('contactsLinks', '/contactsLinks')
 
+    config.add_route('cloudTags', '/cloudTags')
+
     config.add_view_predicate('logged', LoggedPredicate)
     config.add_view_predicate('is_admin', Is_AdminPredicate)
 

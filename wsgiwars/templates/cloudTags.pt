@@ -1,0 +1,15 @@
+<metal:main use-macro="load: layout.pt">
+  <div class="col-md-9" metal:fill-slot="content">
+    <article tal:repeat="tag tags">
+     <div>
+${tag} : ${tags[tag]}
+ </div>
+
+    </article>
+  </div>
+
+</metal:main>
+
+
+
+
