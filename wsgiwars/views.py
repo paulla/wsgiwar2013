@@ -65,6 +65,7 @@ for view in ['couchdb/_design/user',
              'couchdb/_design/viewTag',
              'couchdb/_design/viewFollowers',
              'couchdb/_design/contacts_links',
+             'couchdb/_design/tags',
              ]:
     push(view, db)
 
