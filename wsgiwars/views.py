@@ -49,6 +49,7 @@ from PIL import Image
 
 from wsgiwars.models.user import User
 from wsgiwars.models.link import Link
+from wsgiwars.resources import linkAjax
 
 settings = get_current_registry().settings
 
@@ -293,6 +294,7 @@ def addlink(request):
     """
     Add a link.
     """
+    linkAjax.need()
     return {'link': None}
 
 @view_config(route_name='copyLink', renderer='templates/addlink.pt', \
