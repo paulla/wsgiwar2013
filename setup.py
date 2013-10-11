@@ -24,6 +24,8 @@ requires = [
     'css.fontawesome',
     'pyramid_mailer',
     'pillow',
+    'js.jquery',
+    'fanstatic',
     ]
 
 setup(name='wsgiwars',
