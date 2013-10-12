@@ -323,7 +323,8 @@ def submitlink(request):
     tags = [tag.strip() for tag in request.POST['tags'].split(',')]
 
     link = Link()
-    link.url = request.POST['link']
+    link.url = request.POST['link'].strip()
+    link.title = request.POST['title'].strip()
     link.created = datetime.datetime.now()
     link.comment = request.POST['comment'].strip()
     link.userID = request.session['login']
