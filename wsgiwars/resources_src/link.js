@@ -1,5 +1,10 @@
 $( document ).ready(function() {
-    $( ".link" ).change(function() {
-	console.log( "Handler for .change() called.");
+    $("#link" ).change(function() {
+	$.post('/ajax/gettitle',
+	       {'url': $(this).val()},
+	       function (data) {
+		   $("#title").val(data['title']);
+	       }
+	      );
     });
 });

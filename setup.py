@@ -56,5 +56,7 @@ setup(name='wsgiwars',
       setAdmin = wsgiwars.utils:setAdmin
       delAndPurge = wsgiwars.utils:delAndPurge
       coherence = wsgiwars.utils:coherence
+      [fanstatic.libraries]
+      wsgiwars = wsgiwars.resources:library
       """,
       )
