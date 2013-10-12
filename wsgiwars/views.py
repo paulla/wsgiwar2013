@@ -29,6 +29,7 @@ import datetime
 import tempfile
 import os
 import random
+import urllib
 
 from pyramid.view import view_config
 from pyramid.threadlocal import get_current_registry
@@ -41,6 +42,8 @@ from pyramid_mailer.mailer import Mailer
 from pyramid_mailer.message import Message
 
 import bcrypt
+
+from readability.readability import Document
 
 import couchdbkit
 from couchdbkit.designer import push
@@ -700,3 +703,13 @@ def cloudTags(request):
     tags = {tag['key']: tag['value'] for tag in tmp}
 
     return {'tags' :tags}
+
+@view_config(route_name='getTitle', renderer='json', logged=True)
+def getTitle(request):
+    """
+    Get title.
+    """
+    url = request.POST['url']
+    html = urllib.urlopen(url).read()
+
+    return {'title': Document(html).short_title()}

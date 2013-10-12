@@ -26,6 +26,7 @@ requires = [
     'pillow',
     'js.jquery',
     'fanstatic',
+    'readability-lxml',
     ]
 
 setup(name='wsgiwars',
