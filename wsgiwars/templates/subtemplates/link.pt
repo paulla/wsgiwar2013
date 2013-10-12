@@ -1,7 +1,7 @@
 <article>
   <div class="link col-md-8" >
     <div class="row">
-      <a class="col-md-6" href="${link.url}">${link.url}</a>
+      <a class="col-md-6" href="${link.url}">${link.title or link.url}</a>
       <span class='col-md-2'>
 	<i class="icon-minus"></i>
 	<a href="${request.route_path('user', userid=link.userID)}">
@@ -17,7 +17,7 @@
     </div>
     <div class="row">
         <a class="col-md-6" href="${request.route_path('comment', link=link._id)}">Comments</a>
-    </div>    
+    </div>
   </div>
   <tal:if condition='"login" in request.session'>
     <a class="col-md-1" tal:condition="request.session['login'] != link.userID" href="${request.route_path('copyLink', link=link._id)}">
