@@ -110,6 +110,7 @@ def main(global_config, **settings):
     config.add_fanstatic_resources(['js.bootstrap.bootstrap',
                                     'js.bootstrap.bootstrap_theme',
                                     'css.fontawesome.fontawesome',
+                                    'wsgiwars.resources.cssLink'
                                     ], r'.*\.pt')
 
     config.scan()

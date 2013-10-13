@@ -1,5 +1,6 @@
-<article>
-  <div class="link col-md-8" >
+<article class="well well-lg">
+
+    <div class="link col-md-10" >
     <div class="row">
       <a class="col-md-6" href="${link.url}">${link.title or link.url}</a>
       <span class='col-md-2'>
@@ -12,13 +13,13 @@
     <div class="row">
       <a tal:repeat="tag link.tags" href="${request.route_path('tag', tag=tag)}">${tag}</a>
     </div>
-    <div class="row">
+    <div class="row" tal:condition="link.comment.strip()">
       <p class="col-md-7"><pre>${link.comment.strip()}</pre></p>
     </div>
     <div class="row">
         <a class="col-md-6" href="${request.route_path('comment', link=link._id)}">Comments</a>
     </div>
-  </div>
+  </div
   <tal:if condition='"login" in request.session'>
     <a class="col-md-1" tal:condition="request.session['login'] != link.userID" href="${request.route_path('copyLink', link=link._id)}">
       <i class="icon-plus"></i>
@@ -29,4 +30,6 @@
       <i class="icon-remove"></i>
     </a>
   </tal:if>
+
 </article>
+
