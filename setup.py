@@ -24,6 +24,9 @@ requires = [
     'css.fontawesome',
     'pyramid_mailer',
     'pillow',
+    'js.jquery',
+    'fanstatic',
+    'readability-lxml',
     ]
 
 setup(name='wsgiwars',
@@ -52,5 +55,8 @@ setup(name='wsgiwars',
       [console_scripts]
       setAdmin = wsgiwars.utils:setAdmin
       delAndPurge = wsgiwars.utils:delAndPurge
+      coherence = wsgiwars.utils:coherence
+      [fanstatic.libraries]
+      wsgiwars = wsgiwars.resources:library
       """,
       )

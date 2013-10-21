@@ -10,6 +10,12 @@
       </div>
 
       <div class='row'>
+	<label class="col-md-2" for="title" i18n:translate=''>Title :</label>
+	<input tal:condition="link is not None" class="col-md-7" name="title" id="title" placeholder="" type="text" value="${link.title}" readonly='readonly'/>
+	<input tal:condition="link is None" class="col-md-7" name="title" id="title" placeholder="" type="text"  readonly='readonly'/>
+      </div>
+
+      <div class='row'>
 	<label class="col-md-2" for="tags" i18n:translate=''>Tags :</label>
 
 	<input  tal:condition="link is not None" class="col-md-7" name="tags" id="tags"

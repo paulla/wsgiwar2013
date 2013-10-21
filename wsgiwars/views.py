@@ -3,11 +3,11 @@
 #
 # Copyright (c) 2013 PauLLA
 #
-# Permission is hereby granted, free of charge, to any person obtaining a 
+# Permission is hereby granted, free of charge, to any person obtaining a
 # copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation 
-# the rights to use, copy, modify, merge, publish, distribute, sublicense, 
-# and/or sell copies of the Software, and to permit persons to whom the 
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
 # Software is furnished to do so, subject to the following conditions:
 #
 # The above copyright notice and this permission notice shall be included in
@@ -16,9 +16,9 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 # IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 # FITNES FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER 
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING 
-# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 # DEALINGS IN THE SOFTWARE.
 ############################################################################
 
@@ -29,6 +29,7 @@ import datetime
 import tempfile
 import os
 import random
+import urllib
 
 from pyramid.view import view_config
 from pyramid.threadlocal import get_current_registry
@@ -42,6 +43,8 @@ from pyramid_mailer.message import Message
 
 import bcrypt
 
+from readability.readability import Document
+
 import couchdbkit
 from couchdbkit.designer import push
 
@@ -49,6 +52,7 @@ from PIL import Image
 
 from wsgiwars.models.user import User
 from wsgiwars.models.link import Link
+from wsgiwars.resources import linkAjax
 
 settings = get_current_registry().settings
 
@@ -63,7 +67,10 @@ for view in ['couchdb/_design/user',
              'couchdb/_design/user_link',
              'couchdb/_design/my_link',
              'couchdb/_design/viewTag',
-             'couchdb/_design/viewFollowers', ]:
+             'couchdb/_design/viewFollowers',
+             'couchdb/_design/contacts_links',
+             'couchdb/_design/tags',
+             ]:
     push(view, db)
 
 avatarSize = 128,128
@@ -266,8 +273,8 @@ def submitSignup(request):
             os.remove(originImage)
             os.remove(thumbImage)
 
-        confirm_link = request.route_url('checkLogin', 
-                userid = user._id, 
+        confirm_link = request.route_url('checkLogin',
+                userid = user._id,
                 randomid = user.random)
 
         mailer = Mailer()
@@ -290,6 +297,7 @@ def addlink(request):
     """
     Add a link.
     """
+    linkAjax.need()
     return {'link': None}
 
 @view_config(route_name='copyLink', renderer='templates/addlink.pt', \
@@ -315,7 +323,8 @@ def submitlink(request):
     tags = [tag.strip() for tag in request.POST['tags'].split(',')]
 
     link = Link()
-    link.url = request.POST['link']
+    link.url = request.POST['link'].strip()
+    link.title = request.POST['title'].strip()
     link.created = datetime.datetime.now()
     link.comment = request.POST['comment'].strip()
     link.userID = request.session['login']
@@ -327,6 +336,11 @@ def submitlink(request):
         link.private = True
 
     link.save()
+
+    if not link.private:
+        user = User.get(request.session['login'])
+        user.links[link._id] = link.created
+        user.save()
 
     request.session.flash("link added !")
     return HTTPFound(location=request.route_path('home'))
@@ -525,9 +539,9 @@ def profile(request):
 
         if request.POST['submitDelete']:
             mailer = Mailer()
-            message = Message(subject="Account deleted", 
-                             sender=settings['mail_from'], 
-                             recipients=[user.mail], 
+            message = Message(subject="Account deleted",
+                             sender=settings['mail_from'],
+                             recipients=[user.mail],
                              body="Your account have been deleted")
             mailer.send_immediately(message, fail_silently=False)
             user.delete()
@@ -585,7 +599,14 @@ def rmlink(request):
     Delete a link.
     """
     link = Link.get(request.matchdict['link'])
+
+    if not link.private:
+        user = User.get(request.session['login'])
+        del(user.links[request.matchdict['link']])
+        user.save()
+
     link.delete()
+
     return HTTPFound(location=request.route_path('mylinks'))
 
 @view_config(route_name= 'rmComment', logged=True)
@@ -651,3 +672,45 @@ def submitcheckLogin(request):
     request.session.save()
 
     return HTTPFound(location=request.route_path('home'), headers=headers)
+
+@view_config(route_name="contactsLinks", renderer="templates/contactslinks.pt", \
+             logged=True)
+def contactsLinks(request):
+    """
+    My contacts links.
+    """
+    limit, page = limitAndPage(request)
+
+    links = Link.view('contacts_links/all', limit=limit,
+                      descending=True, skip=page*limit,
+                      startkey=[request.session['login'], {}],
+                      endkey=[request.session['login']], include_docs=True)
+
+    return {'links': links, 'limit': limit, 'page': page}
+
+
+@view_config(route_name="cloudTags", renderer="templates/cloudTags.pt")
+def cloudTags(request):
+    """
+    Cloud Tags.
+    """
+
+    tmp = Link.view('tags/all',
+                    group=True,
+                    group_level=1
+        )
+
+
+    tags = {tag['key']: tag['value'] for tag in tmp}
+
+    return {'tags' :tags}
+
+@view_config(route_name='getTitle', renderer='json', logged=True)
+def getTitle(request):
+    """
+    Get title.
+    """
+    url = request.POST['url']
+    html = urllib.urlopen(url).read()
+
+    return {'title': Document(html).short_title()}
